@@ -408,14 +408,16 @@ body.lock { overflow: hidden; height: 100vh; }
   z-index: 1;
   filter: saturate(1.06) contrast(1.02);
 }
-/* Box-art mode: horizontal game box covers fill the art area edge-to-edge */
+/* Box-art mode: horizontal game box covers — show entire image without cropping */
+.label-art.box-art {
+  background: #1a2238;  /* dark fallback - overridden per-cart via inline style if needed */
+}
 .label-art.box-art img.art-photo {
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   filter: saturate(1.08) contrast(1.03);
 }
-/* When label-title is hidden (box-art), give art area a 3:2 aspect ratio instead of flex:1 */
-.cart .cart-label:has(.label-art.box-art:only-of-type:not(:last-child)) .label-art.box-art,
+/* Art area takes 3:2 aspect ratio matching the box-art images */
 .cart .label-art.box-art {
   flex: none;
   aspect-ratio: 3 / 2;
