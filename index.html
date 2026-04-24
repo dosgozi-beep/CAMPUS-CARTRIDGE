@@ -929,6 +929,23 @@ body.event-active .crt-tv, body.event-active .signboard, body.event-active .boy,
   .cart-name-overlay .cno-sub { font-size: 9px; letter-spacing: 2px; }
   .poster { width: 260px; }
   .poster-track { padding: 40px 10vw 60px; gap: 30px; }
+  /* Wall flyers shrink on mobile */
+  .poster-track .flyer.flyer-wall { width: 260px; }
+  .flyer-wall .flyer-date { top: 38px; padding: 5px 9px 7px; }
+  .flyer-wall .flyer-date .fd-num { font-size: 36px; letter-spacing: -1px; }
+  .flyer-wall .flyer-date .fd-dow { font-size: 10px; padding: 2px 7px; }
+  .flyer-wall .flyer-date-recur { font-size: 11px; padding: 6px 10px; max-width: 100px; }
+  .flyer-wall .flyer-stamp { font-size: 10px; padding: 5px 9px 6px; top: 10px; }
+  .flyer-wall .flyer-org { font-size: 7px; padding: 4px 8px; }
+  .flyer-wall .flyer-info { padding: 38px 11px 9px; }
+  .flyer-wall .flyer-subtitle { font-size: 9px; letter-spacing: 2px; margin-bottom: 3px; }
+  .flyer-wall .flyer-title { font-size: 17px; margin-bottom: 5px; }
+  .flyer-wall .flyer-title.en { font-size: 22px; }
+  .flyer-wall .flyer-tagline { font-size: 10px; margin-bottom: 6px; padding-left: 8px; max-height: 28px; }
+  .flyer-wall .flyer-details { font-size: 9px; gap: 2px; padding-top: 5px; }
+  .flyer-wall .flyer-details .fd-row .lbl { font-size: 8px; width: 36px; }
+  .flyer-wall .flyer-accent-bar { bottom: 105px; height: 3px; }
+  .flyer-wall:hover { transform: rotate(0deg) scale(1.04) translateY(-6px); }
   .scroll-arrow { width: 44px; height: 44px; font-size: 11px; }
   .scroll-arrow.prev { left: 10px; } .scroll-arrow.next { right: 10px; }
   .event-modal { grid-template-columns: 1fr; max-height: 94vh; }
@@ -952,6 +969,14 @@ body.event-active .crt-tv, body.event-active .signboard, body.event-active .boy,
   .focus-info .fi-short { font-size: 26px; letter-spacing: 3px; }
   .focus-info .fi-name { font-size: 12px; }
   .focus-info .fi-desc { font-size: 10.5px; }
+  /* Mobile wall flyers */
+  .poster-track .flyer.flyer-wall { width: 230px; }
+  .poster-track { padding: 28px 6vw 40px; gap: 18px; }
+  .flyer-wall .flyer-date .fd-num { font-size: 30px; }
+  .flyer-wall .flyer-title { font-size: 15px; }
+  .flyer-wall .flyer-title.en { font-size: 19px; }
+  .flyer-wall .flyer-tagline { font-size: 9px; max-height: 24px; }
+  .flyer-wall .flyer-info { padding: 32px 9px 8px; }
 }
 
 /* Full-scene image supersedes CSS decorations */
