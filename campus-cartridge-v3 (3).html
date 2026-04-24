@@ -1,0 +1,2508 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAMPUS CARTRIDGE — 学生団体カートリッジ専門店</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Cinzel:wght@600;800&family=Cormorant+Garamond:ital,wght@1,500;1,700&family=DM+Serif+Display:ital@0;1&family=DotGothic16&family=Kalam:wght@400;700&family=Playfair+Display:ital,wght@1,700;1,900&family=Press+Start+2P&family=Shippori+Mincho+B1:wght@500;700;800&family=VT323&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #06060f;
+  --neon-pink: #ff2a6d;
+  --neon-cyan: #00f5ff;
+  --neon-purple: #b24bf3;
+  --neon-amber: #ffb800;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--void); font-family: 'Zen Kaku Gothic New', sans-serif; color: #fff; min-height: 100vh; }
+body { overflow-x: hidden; }
+body.lock { overflow: hidden; height: 100vh; }
+.stage { width: 100vw; min-height: 100vh; position: relative; }
+
+/* ========= SHOP SCENE ========= */
+.shop {
+  position: relative; min-height: 100vh;
+  display: flex; flex-direction: column; align-items: stretch;
+  justify-content: space-between;
+  padding: 0 0 20px;
+  transition: opacity 0.7s cubic-bezier(0.7,0,0.3,1), transform 0.7s cubic-bezier(0.7,0,0.3,1), filter 0.7s;
+  background:
+    linear-gradient(180deg, rgba(10,0,20,0.15) 0%, rgba(10,0,30,0.05) 30%, rgba(10,0,30,0.2) 70%, rgba(10,0,30,0.55) 100%),
+    url('images/shop-scene.jpg') center top / cover no-repeat fixed,
+    #0a0818;
+}
+.shop.exit { opacity: 0; transform: scale(1.15); filter: blur(6px); pointer-events: none; }
+.shop::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 60px, rgba(255,255,255,0.015) 60px 61px); pointer-events: none; }
+
+.floor { position: fixed; bottom: 0; left: 0; right: 0; height: 180px;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(178,75,243,0.5) 100%),
+    repeating-linear-gradient(0deg, transparent 0 40px, rgba(0,245,255,0.3) 40px 41px),
+    repeating-linear-gradient(90deg, transparent 0 40px, rgba(0,245,255,0.3) 40px 41px);
+  transform: perspective(400px) rotateX(65deg); transform-origin: bottom;
+  pointer-events: none; z-index: 2; transition: opacity 0.7s;
+}
+.horizon { position: fixed; bottom: 150px; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-pink), var(--neon-cyan), var(--neon-pink), transparent);
+  box-shadow: 0 0 16px var(--neon-pink), 0 0 32px var(--neon-cyan);
+  pointer-events: none; z-index: 3; transition: opacity 0.7s;
+}
+/* =============================================================
+   NEW LAYOUT: Top (sign + focus-info) / Bottom (shelf)
+   ============================================================= */
+.shop-top {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 26px 20px 0;
+  position: relative; z-index: 4;
+}
+.shop-bottom {
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; z-index: 4;
+  width: 100%;
+}
+
+.sign-wrap { text-align: center; z-index: 4; position: relative;
+  padding: 4px 30px 8px;
+  max-width: calc(100vw - 240px);
+}
+.neon-sign { font-family: 'Bebas Neue', sans-serif; font-size: 58px; letter-spacing: 10px; color: #fff;
+  text-shadow: 0 0 4px #fff, 0 0 12px var(--neon-pink), 0 0 24px var(--neon-pink), 0 0 48px var(--neon-pink), 0 0 80px var(--neon-pink);
+  animation: flicker 5s infinite; line-height: 1;
+}
+.neon-sign .amp { color: var(--neon-cyan); font-style: italic; margin: 0 4px;
+  text-shadow: 0 0 4px #fff, 0 0 12px var(--neon-cyan), 0 0 24px var(--neon-cyan), 0 0 48px var(--neon-cyan);
+}
+@keyframes flicker { 0%,92%,100% { opacity: 1; } 93% { opacity: 0.3; } 94% { opacity: 1; } 95% { opacity: 0.6; } 96% { opacity: 1; } }
+.neon-sub { font-family: 'Shippori Mincho B1', serif; font-size: 12px; letter-spacing: 8px; color: var(--neon-cyan); opacity: 0.85; margin-top: 6px; }
+.sign-tag { display: inline-block; margin-top: 10px; font-family: 'VT323', monospace; font-size: 13px; color: var(--neon-amber); letter-spacing: 3px;
+  border: 1px solid var(--neon-amber); padding: 2px 10px; box-shadow: 0 0 10px rgba(255,184,0,0.4);
+}
+.shelf-wrap { z-index: 4; position: relative; width: 100%; max-width: 1280px;
+  padding: 4px 14px 14px;
+}
+.shelf-label { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; padding: 4px 14px;
+  border-bottom: 1px solid rgba(255,42,109,0.18);
+}
+.shelf-label .tag { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--neon-pink); letter-spacing: 1px; }
+.shelf-label .line { flex: 1; height: 1px; background: repeating-linear-gradient(90deg, var(--neon-pink) 0 4px, transparent 4px 8px); opacity: 0.6; }
+.shelf-label .count { font-family: 'VT323', monospace; font-size: 16px; color: var(--neon-cyan); letter-spacing: 2px; }
+.shelf-categories {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 14px 0 0;
+  max-width: 720px;
+}
+.cat-chip { font-family: 'DotGothic16', monospace; font-size: 11px; color: var(--neon-cyan);
+  background: rgba(6,2,18,0.75); border: 1px solid rgba(0,245,255,0.4); padding: 5px 11px; cursor: pointer; letter-spacing: 1px;
+  transition: all 0.2s; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.cat-chip:hover { background: rgba(0,245,255,0.25); }
+.cat-chip.active { background: var(--neon-cyan); color: #000; font-weight: 700; border-color: var(--neon-cyan); }
+.shelf { position: relative; }
+.shelf-track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  overflow-y: visible;
+  /* Huge side padding so first/last cart can center when scrolled to extreme */
+  padding: 28px calc(50% - 120px) 32px;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  perspective: 1200px;
+}
+.shelf-track::-webkit-scrollbar { display: none; }
+
+/* Individual cart: slightly smaller than before so the focus-info fits below */
+.shelf-track .cart {
+  flex-shrink: 0;
+  width: 240px;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  transition: transform 0.5s cubic-bezier(0.3, 1, 0.4, 1),
+              opacity 0.4s, filter 0.4s;
+  transform-origin: center bottom;
+}
+
+/* Non-focused carts shrink and dim so focus is clearly in center */
+.shelf-track .cart:not(.is-focus) {
+  transform: scale(0.66) rotateY(var(--rot, 0deg));
+  opacity: 0.45;
+  filter: saturate(0.75) brightness(0.75);
+}
+.shelf-track .cart.is-focus {
+  transform: scale(1.05);
+  opacity: 1;
+  filter: saturate(1.1) brightness(1.05) drop-shadow(0 20px 30px rgba(255,42,109,0.35));
+  z-index: 3;
+}
+.shelf-track .cart.is-focus .cart-glow { opacity: 0.6; }
+.shelf-track .cart.is-prev { --rot: 18deg; transform-origin: right center; }
+.shelf-track .cart.is-next { --rot: -18deg; transform-origin: left center; }
+.shelf-track .cart:hover:not(.is-focus) {
+  transform: scale(0.75);
+  opacity: 0.9;
+  filter: saturate(1) brightness(1);
+  cursor: pointer;
+}
+
+.shelf-nav {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  width: 100%;
+  display: flex; justify-content: space-between;
+  padding: 0 16px;
+  pointer-events: none;
+  z-index: 5;
+}
+.shelf-nav button {
+  pointer-events: auto;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(6,2,18,0.85);
+  border: 1px solid rgba(255,42,109,0.5);
+  color: #fff; font-size: 22px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6), 0 0 20px rgba(255,42,109,0.3);
+  transition: all 0.2s;
+}
+.shelf-nav button:hover {
+  background: var(--neon-pink);
+  border-color: var(--neon-pink);
+  transform: scale(1.12);
+  box-shadow: 0 6px 24px rgba(255,42,109,0.8);
+}
+
+/* Focused cart info callout */
+.focus-info {
+  text-align: center;
+  padding: 14px 30px 10px;
+  min-height: auto;
+  max-width: 760px;
+  margin: 8px auto 0;
+  transition: opacity 0.3s;
+  /* No panel background — let the shop scene show through */
+}
+.focus-info .fi-short {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 46px;
+  letter-spacing: 7px;
+  color: var(--neon-pink);
+  text-shadow:
+    0 0 16px rgba(255,42,109,0.9),
+    0 0 40px rgba(255,42,109,0.5),
+    0 2px 10px rgba(0,0,0,0.95);
+  line-height: 1;
+  margin-bottom: 6px;
+  -webkit-text-stroke: 1px rgba(0,0,0,0.5);
+  paint-order: stroke fill;
+}
+.focus-info .fi-name {
+  font-family: 'Shippori Mincho B1', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  opacity: 1;
+  margin-bottom: 6px;
+  text-shadow:
+    0 2px 6px rgba(0,0,0,0.95),
+    0 0 18px rgba(0,0,0,0.65);
+}
+.focus-info .fi-desc {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  max-width: 560px;
+  margin: 0 auto 2px;
+  line-height: 1.55;
+  text-shadow:
+    0 1px 4px rgba(0,0,0,0.95),
+    0 0 12px rgba(0,0,0,0.6);
+}
+.focus-info .fi-cta {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--neon-cyan);
+  padding: 9px 16px;
+  border: 1.5px solid var(--neon-cyan);
+  background: rgba(0,0,0,0.65);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.5), 0 0 20px rgba(0,245,255,0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.focus-info .fi-cta:hover {
+  background: var(--neon-cyan);
+  color: #000;
+  box-shadow: 0 0 28px rgba(0,245,255,0.8);
+  transform: translateY(-2px);
+}
+
+.shelf-edge {
+  position: absolute;
+  top: 0; bottom: 0; width: 120px;
+  pointer-events: none; z-index: 4;
+}
+.shelf-edge.left { left: 0; background: linear-gradient(90deg, rgba(6,2,18,0.85) 0%, transparent 100%); }
+.shelf-edge.right { right: 0; background: linear-gradient(-90deg, rgba(6,2,18,0.85) 0%, transparent 100%); }
+.shelf::before { content: none; }
+
+/* ========= SUPER FAMICOM STYLE CARTRIDGE ========= */
+.cart {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.3,1.3,0.4,1);
+}
+.cart:hover { transform: translateY(-10px) rotate(-0.8deg) scale(1.02); z-index: 5; }
+.cart:hover .cart-glow { opacity: 0.8; }
+.cart:hover .cart-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
+.cart-glow {
+  position: absolute; inset: -18px;
+  background: radial-gradient(ellipse, var(--glow, #fff) 0%, transparent 55%);
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  z-index: -1; filter: blur(14px);
+}
+
+/* === Plastic shell: authentic lavender-gray SFC === */
+.cart-shell {
+  width: 100%; height: 100%;
+  background:
+    linear-gradient(180deg,
+      #ebe6ee 0%,
+      #dad3de 8%,
+      #c6bfca 22%,
+      #b4adb9 55%,
+      #968e9b 88%,
+      #7d7583 100%);
+  border-radius: 12px 12px 4px 4px;
+  padding: 7px 8px 7px;
+  position: relative;
+  display: flex; flex-direction: column;
+  box-sizing: border-box;
+  box-shadow:
+    inset 0 2px 1px rgba(255,255,255,0.8),
+    inset 0 -4px 2px rgba(0,0,0,0.32),
+    inset 2px 0 1px rgba(255,255,255,0.25),
+    inset -2px 0 1px rgba(0,0,0,0.2),
+    0 10px 22px rgba(0,0,0,0.55),
+    0 2px 4px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+
+/* Plastic mold line - vertical seam */
+.cart-shell::before {
+  content: ''; position: absolute;
+  top: 12%; bottom: 14%; left: 50%;
+  width: 0.5px;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(0,0,0,0.08) 25%,
+    rgba(0,0,0,0.08) 75%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* === Top section: vents + SFC logo === */
+.sfc-top {
+  flex-shrink: 0;
+  height: 10px;
+  margin: 0 2px 4px;
+  display: flex; align-items: center;
+  gap: 5px;
+}
+.sfc-vents {
+  flex: 1;
+  height: 100%;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(0,0,0,0.32) 0 1.5px,
+    rgba(255,255,255,0.5) 1.5px 2.5px,
+    rgba(0,0,0,0.1) 2.5px 3.5px
+  );
+  border-radius: 1px;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(0,0,0,0.3),
+    inset 0 1px 1px rgba(0,0,0,0.2);
+}
+.sfc-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 6px;
+  letter-spacing: 1.2px;
+  color: rgba(0,0,0,0.55);
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+/* === Label === */
+.cart-label {
+  flex: 1; width: 100%;
+  background: #fff;
+  border: 0.8px solid rgba(0,0,0,0.5);
+  border-radius: 1.5px;
+  display: flex; flex-direction: column;
+  overflow: hidden; position: relative;
+  box-shadow:
+    inset 0 1px 3px rgba(0,0,0,0.25),
+    0 1px 0 rgba(255,255,255,0.75),
+    0 -0.5px 0 rgba(0,0,0,0.18);
+}
+
+/* Team colored strip at TOP of label */
+.label-top {
+  height: 14px;
+  background: var(--strip-bg, #cc0018);
+  color: var(--strip-color, #fff);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 7px;
+  letter-spacing: 1.4px;
+  line-height: 14px;
+  text-align: center;
+  border-bottom: 0.5px solid rgba(0,0,0,0.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 6px;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+.label-top::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, transparent 45%);
+  pointer-events: none;
+}
+
+/* Art area */
+.label-art {
+  flex: 1;
+  background: var(--art-bg, #000);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--art-color, #fff);
+  z-index: 1;
+}
+.label-art img.art-photo {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  filter: saturate(1.06) contrast(1.02);
+}
+.label-art.has-photo::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 25% 10%, rgba(255,255,255,0.14) 0%, transparent 45%),
+    linear-gradient(180deg, transparent 65%, rgba(0,0,0,0.12) 100%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Club name overlay on top of cartridge image */
+.cart-name-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  padding: 10px 10px 8px;
+  z-index: 4;
+  text-align: center;
+  color: var(--cno-color, #fff);
+  font-family: var(--cno-font, 'Bebas Neue'), sans-serif;
+  font-size: var(--cno-size, 26px);
+  line-height: 1;
+  letter-spacing: var(--cno-spacing, 2px);
+  font-weight: var(--cno-weight, 700);
+  font-style: var(--cno-style, normal);
+  /* Crisp black outline so text stays legible on any image without a blur box */
+  -webkit-text-stroke: 2px #000;
+  paint-order: stroke fill;
+  text-shadow:
+    0 3px 4px rgba(0,0,0,0.95),
+    0 0 14px var(--cno-shadow, rgba(0,0,0,0.7)),
+    0 0 28px rgba(0,0,0,0.4);
+  pointer-events: none;
+}
+.cart-name-overlay .cno-sub {
+  display: block;
+  font-family: 'VT323', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  opacity: 0.95;
+  margin-top: 4px;
+  font-weight: 400;
+  font-style: normal;
+  color: #fff;
+  -webkit-text-stroke: 1px #000;
+}
+
+.art-symbol { font-size: 46px; line-height: 1; font-weight: 900; text-shadow: 2px 2px 0 rgba(0,0,0,0.3); z-index: 2; position: relative; }
+.art-symbol.kanji { font-family: 'Shippori Mincho B1', serif; font-size: 48px; }
+.art-symbol.en { font-family: 'Bebas Neue', sans-serif; font-size: 42px; letter-spacing: 1px; }
+.art-symbol.mono { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; letter-spacing: 1px; }
+.art-symbol.small { font-size: 32px; }
+.art-scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0 1px, transparent 1px 3px); pointer-events: none; }
+.art-dots { position: absolute; inset: 0; background: radial-gradient(circle, rgba(255,255,255,0.2) 0.8px, transparent 1.2px) 0 0 / 6px 6px; pointer-events: none; }
+.art-stars::before, .art-stars::after { content: '✦'; position: absolute; color: currentColor; opacity: 0.7; font-size: 14px; }
+.art-stars::before { top: 8%; left: 12%; }
+.art-stars::after { bottom: 10%; right: 14%; font-size: 10px; }
+.art-grid { position: absolute; inset: 0; background: repeating-linear-gradient(90deg, rgba(0,255,136,0.15) 0 1px, transparent 1px 10px), repeating-linear-gradient(0deg, rgba(0,255,136,0.15) 0 1px, transparent 1px 10px); pointer-events: none; }
+.art-rays { position: absolute; inset: 0; background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(255,255,255,0.12) 10deg, transparent 20deg, transparent 90deg, rgba(255,255,255,0.1) 100deg, transparent 110deg, transparent 180deg, rgba(255,255,255,0.12) 190deg, transparent 200deg, transparent 270deg, rgba(255,255,255,0.1) 280deg, transparent 290deg); pointer-events: none; }
+.art-stripe { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(0,0,0,0.12) 0 6px, transparent 6px 14px); pointer-events: none; }
+.art-flame { position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 70%, rgba(255,100,0,0.5) 0%, transparent 40%), radial-gradient(ellipse at 70% 60%, rgba(255,200,0,0.4) 0%, transparent 35%); pointer-events: none; }
+
+/* Title bar at bottom of label */
+.label-title {
+  background: var(--title-bg, #0a0a0a);
+  color: var(--title-color, #fff);
+  padding: 4px 5px 4px;
+  border-top: 0.5px solid rgba(0,0,0,0.5);
+  z-index: 2;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 24px;
+  flex-shrink: 0;
+}
+.title-text { flex: 1; min-width: 0; }
+.title-main {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.title-main.jp {
+  font-family: 'Shippori Mincho B1', serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.title-sub {
+  font-family: 'VT323', monospace;
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+  line-height: 1;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* SUPER FAMICOM badge next to title */
+.sfc-badge {
+  flex-shrink: 0;
+  padding: 2px 4px;
+  border-radius: 1px;
+  background: rgba(0,0,0,0.22);
+  font-family: 'Bebas Neue', sans-serif;
+  line-height: 1;
+  text-align: center;
+  border-left: 0.5px solid rgba(255,255,255,0.15);
+}
+.sfc-badge .sfc-1 { font-size: 5px; letter-spacing: 1.3px; opacity: 0.85; display: block; }
+.sfc-badge .sfc-2 { font-size: 7.5px; letter-spacing: 0.4px; font-weight: bold; margin-top: 1px; display: block; }
+.sfc-badge.light { color: #fff; }
+.sfc-badge.dark { color: rgba(0,0,0,0.85); background: rgba(255,255,255,0.3); border-left-color: rgba(0,0,0,0.2); }
+
+/* Product code on plastic, below label */
+.plastic-info {
+  flex-shrink: 0;
+  padding: 3px 3px 0;
+  margin-top: 2px;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 5.5px;
+  color: rgba(0,0,0,0.55);
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.cart-tag { position: absolute; top: -6px; right: -6px; background: var(--neon-amber); color: #000; font-family: 'Press Start 2P', monospace; font-size: 6.5px; padding: 3px 5px; border-radius: 2px; transform: rotate(8deg); box-shadow: 0 2px 5px rgba(0,0,0,0.6); z-index: 4; letter-spacing: 0.5px; }
+.cart-tag.hot { background: var(--neon-pink); color: #fff; }
+.cart-tag.new { background: var(--neon-cyan); color: #000; }
+.cart-tag.last { background: #fff; color: #000; }
+.cart-tag.rare { background: #9b59b6; color: #fff; }
+.cart-tooltip { position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(8px); background: #000; border: 1px solid var(--glow, var(--neon-cyan)); padding: 3px 8px; font-family: 'VT323', monospace; font-size: 12px; color: var(--glow, var(--neon-cyan)); white-space: nowrap; opacity: 0; transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 10; letter-spacing: 2px; }
+.cart-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: var(--glow, var(--neon-cyan)); }
+
+/* ========= BOY + CRT + SIGNBOARD ========= */
+.boy {
+  position: fixed; bottom: 10px; left: 50%;
+  transform: translateX(-50%);
+  width: 200px; height: 300px;
+  z-index: 5; pointer-events: none;
+  filter: drop-shadow(0 0 24px rgba(255,42,109,0.5)) drop-shadow(0 0 48px rgba(0,245,255,0.25));
+  transition: transform 0.6s, opacity 0.7s;
+}
+.boy.pick { transform: translateX(-50%) translateY(-8px); }
+.boy-img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+}
+.boy-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: 8px;
+}
+.bp-frame {
+  width: 70%; aspect-ratio: 2/3;
+  border: 2px dashed rgba(0, 245, 255, 0.6);
+  border-radius: 8px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: rgba(0, 245, 255, 0.04);
+  padding: 10px;
+  position: relative;
+}
+.bp-label {
+  position: absolute; top: -10px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--void);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px; color: var(--neon-cyan);
+  padding: 2px 6px;
+  letter-spacing: 1px;
+}
+.bp-icon {
+  font-size: 52px;
+  filter: grayscale(1) brightness(1.3);
+  opacity: 0.6;
+}
+.bp-caption {
+  font-family: 'VT323', monospace;
+  font-size: 13px;
+  color: var(--neon-cyan);
+  letter-spacing: 2px;
+  text-align: center;
+  opacity: 0.8;
+  margin-top: 8px;
+  line-height: 1.2;
+}
+.crt-tv { position: fixed; bottom: 150px; right: 32px; width: 150px; height: 130px;
+  background: linear-gradient(180deg, #2a2a32 0%, #1a1a22 100%); border-radius: 14px 14px 8px 8px;
+  padding: 12px 12px 20px; border: 2px solid #0a0a0f; box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+  z-index: 4; transform: rotate(3deg); transition: opacity 0.7s;
+}
+.crt-tv::before { content: ''; position: absolute; bottom: 4px; left: 20px; width: 12px; height: 4px;
+  background: radial-gradient(circle, #ff0033, #660011); border-radius: 50%; box-shadow: 0 0 6px #ff0033;
+  animation: crt-led 2s infinite;
+}
+@keyframes crt-led { 50% { opacity: 0.3; } }
+.crt-tv::after { content: 'CH-04'; position: absolute; bottom: 4px; right: 12px; font-family: 'VT323', monospace; font-size: 10px; color: #666; }
+.crt-screen { width: 100%; height: 100%;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0 1px, transparent 1px 3px), radial-gradient(ellipse at center, #0d3d1c 0%, #020807 100%);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-direction: column;
+  color: #5dff8c; font-family: 'VT323', monospace; font-size: 12px; text-align: center;
+  padding: 8px; line-height: 1.2; letter-spacing: 1px; text-shadow: 0 0 4px #5dff8c;
+}
+.blink { animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.signboard { position: fixed; bottom: 170px; left: 32px; z-index: 4; transform: rotate(-4deg); transition: opacity 0.7s; }
+.signboard .sb { background: #1a0a28; border: 2px solid var(--neon-amber); color: var(--neon-amber); padding: 10px 14px;
+  font-family: 'DotGothic16', monospace; font-size: 12px; letter-spacing: 2px;
+  box-shadow: 0 0 14px rgba(255,184,0,0.5), inset 0 0 14px rgba(255,184,0,0.1); line-height: 1.6;
+}
+.signboard .sb b { color: var(--neon-pink); font-weight: normal; }
+body.event-active .crt-tv, body.event-active .signboard, body.event-active .boy, body.event-active .floor, body.event-active .horizon { opacity: 0; pointer-events: none; }
+.scanlines { position: fixed; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0 1px, transparent 1px 3px); z-index: 200; mix-blend-mode: multiply; }
+.vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%); z-index: 199; }
+
+/* ========= FLASH ========= */
+.flash { position: fixed; inset: 0; background: #fff; z-index: 300; opacity: 0; pointer-events: none; mix-blend-mode: screen; }
+.flash.fire { animation: flashfire 0.8s cubic-bezier(0.7,0,0.3,1); }
+@keyframes flashfire {
+  0% { opacity: 0; } 15% { opacity: 1; }
+  30% { opacity: 0.3; transform: translateX(-10px); }
+  45% { opacity: 0.9; transform: translateX(10px); filter: hue-rotate(90deg); }
+  60% { opacity: 0.2; transform: translateX(-4px); filter: hue-rotate(180deg); }
+  80% { opacity: 0.6; filter: hue-rotate(0deg); } 100% { opacity: 0; }
+}
+
+/* ========= POSTER WALL SCENE ========= */
+.wall-scene {
+  position: fixed; inset: 0; z-index: 100;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.6s;
+  display: flex; flex-direction: column;
+  background: #0a0608;
+}
+.wall-scene.active { opacity: 1; pointer-events: auto; }
+
+.wall-bg { position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 40% 50% at 20% 0%, rgba(255,240,200,0.25) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 50% 0%, rgba(255,240,200,0.3) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 80% 0%, rgba(255,240,200,0.25) 0%, transparent 60%),
+    radial-gradient(circle at 30% 40%, rgba(180,160,140,0.06) 0%, transparent 20%),
+    radial-gradient(circle at 70% 70%, rgba(180,160,140,0.05) 0%, transparent 25%),
+    linear-gradient(180deg, #2a2018 0%, #1a1410 40%, #0f0a08 100%);
+}
+.wall-bg::before { content: ''; position: absolute; inset: 0; opacity: 0.15;
+  background-image:
+    radial-gradient(circle at 12% 25%, rgba(255,255,255,0.3) 1px, transparent 2px),
+    radial-gradient(circle at 48% 62%, rgba(0,0,0,0.6) 0.5px, transparent 1.5px),
+    radial-gradient(circle at 73% 18%, rgba(255,255,255,0.2) 1.5px, transparent 3px),
+    radial-gradient(circle at 88% 82%, rgba(0,0,0,0.4) 1px, transparent 2px);
+  background-size: 120px 120px, 80px 80px, 180px 180px, 90px 90px;
+}
+.wall-bg::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent 0 80px, rgba(0,0,0,0.1) 80px 81px);
+}
+.spotlights { position: absolute; top: 0; left: 0; right: 0; height: 50px;
+  display: flex; justify-content: space-around; padding: 0 10%; z-index: 1;
+}
+.spotlight-fix { width: 40px; height: 24px;
+  background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+  border-radius: 50% 50% 0 0 / 60% 60% 0 0; position: relative;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+.spotlight-fix::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 20px; background: #1a1a1a;
+}
+.wall-graffiti { position: absolute; font-family: 'Kalam', cursive;
+  color: var(--neon-pink); opacity: 0.25; pointer-events: none; z-index: 1;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.6);
+}
+.wall-graffiti.g1 { top: 8%; left: 3%; font-size: 32px; transform: rotate(-6deg); color: var(--neon-cyan); }
+.wall-graffiti.g2 { bottom: 12%; right: 4%; font-size: 22px; transform: rotate(4deg); }
+.wall-graffiti.g3 { top: 12%; right: 8%; font-size: 14px; transform: rotate(3deg); color: var(--neon-amber); font-family: 'Press Start 2P', monospace; opacity: 0.35; }
+.torn-poster { position: absolute; background: linear-gradient(180deg, #4a3828 0%, #2a1810 100%);
+  opacity: 0.4; z-index: 1; transform: rotate(var(--rot, -4deg));
+}
+.torn-poster::after { content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, transparent 0 3px, rgba(0,0,0,0.2) 3px 4px);
+}
+.torn-poster.tp1 { top: 8%; left: 2%; width: 50px; height: 80px; --rot: -8deg; }
+.torn-poster.tp2 { bottom: 20%; left: 1%; width: 40px; height: 60px; --rot: 5deg; }
+.torn-poster.tp3 { top: 14%; right: 3%; width: 45px; height: 70px; --rot: 6deg; }
+
+.wall-header { position: relative; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 32px; gap: 16px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+}
+.wall-header .left { display: flex; align-items: center; gap: 18px; }
+.back-btn { background: rgba(0,0,0,0.7); color: #fff;
+  border: 1px solid rgba(255,255,255,0.35); padding: 10px 18px;
+  font-family: 'Press Start 2P', monospace; font-size: 10px; letter-spacing: 2px;
+  cursor: pointer; backdrop-filter: blur(8px); transition: all 0.2s;
+}
+.back-btn:hover { background: rgba(0,0,0,0.9); transform: translateX(-4px); }
+.wall-cart-mini { width: 72px; height: 60px; flex-shrink: 0; }
+.wall-org-title { font-family: 'Shippori Mincho B1', serif; font-size: 20px; font-weight: 800; margin-bottom: 2px; }
+.wall-org-sub { font-family: 'VT323', monospace; font-size: 13px; color: var(--org-accent, #fff); letter-spacing: 2px; opacity: 0.9; }
+.wall-counter { font-family: 'Press Start 2P', monospace; font-size: 10px;
+  color: var(--org-accent, var(--neon-cyan));
+  background: rgba(0,0,0,0.7); padding: 8px 14px;
+  border: 1px solid var(--org-accent, var(--neon-cyan));
+  backdrop-filter: blur(8px); letter-spacing: 2px;
+}
+
+.wall-body { flex: 1; position: relative; z-index: 5; overflow: hidden; }
+.poster-track { position: absolute; inset: 0;
+  display: flex; align-items: center; gap: 50px;
+  padding: 60px 20vw 80px;
+  overflow-x: auto; overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.poster-track::-webkit-scrollbar { display: none; }
+
+/* Flyers in the wall scene are bigger than in the board grid */
+.poster-track .flyer.flyer-wall {
+  flex-shrink: 0;
+  width: 360px;
+  scroll-snap-align: center;
+}
+.flyer-wall .flyer-date { top: 52px; padding: 8px 13px 10px; }
+.flyer-wall .flyer-date .fd-num { font-size: 52px; letter-spacing: -2px; }
+.flyer-wall .flyer-date .fd-dow { font-size: 13px; padding: 3px 10px; }
+.flyer-wall .flyer-date-recur { font-size: 14px; padding: 10px 14px; max-width: 130px; }
+.flyer-wall .flyer-stamp { font-size: 13px; padding: 7px 13px 8px; top: 14px; }
+.flyer-wall .flyer-org { font-size: 8.5px; padding: 5px 10px; }
+.flyer-wall .flyer-info { padding: 56px 16px 14px; }
+.flyer-wall .flyer-subtitle { font-size: 12px; letter-spacing: 3px; margin-bottom: 5px; }
+.flyer-wall .flyer-title { font-size: 26px; margin-bottom: 8px; }
+.flyer-wall .flyer-title.en { font-size: 34px; }
+.flyer-wall .flyer-tagline { font-size: 14px; margin-bottom: 10px; padding-left: 12px; max-height: 40px; }
+.flyer-wall .flyer-details { font-size: 11px; gap: 4px; padding-top: 8px; }
+.flyer-wall .flyer-details .fd-row .lbl { font-size: 10px; width: 46px; }
+.flyer-wall .flyer-accent-bar { bottom: 158px; height: 5px; }
+.flyer-wall:hover { transform: rotate(0deg) scale(1.08) translateY(-12px); }
+.scroll-arrow { position: absolute; top: 50%; transform: translateY(-50%);
+  width: 56px; height: 56px;
+  background: rgba(0,0,0,0.7);
+  border: 2px solid var(--org-accent, #fff);
+  color: var(--org-accent, #fff);
+  cursor: pointer; z-index: 20;
+  backdrop-filter: blur(8px); transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Press Start 2P', monospace; font-size: 14px;
+}
+.scroll-arrow:hover { background: var(--org-accent, #fff); color: #000; }
+.scroll-arrow.prev { left: 20px; }
+.scroll-arrow.next { right: 20px; }
+
+/* Poster */
+.poster { flex-shrink: 0; width: 340px; aspect-ratio: 2 / 3;
+  scroll-snap-align: center; position: relative; cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.3,1.3,0.4,1);
+  transform: rotate(var(--rot, 0deg));
+}
+.poster:hover { transform: translateY(-12px) rotate(0deg) scale(1.04); z-index: 10; }
+.poster:hover .poster-inner { box-shadow: 0 30px 70px rgba(0,0,0,0.9), 0 0 50px var(--poster-accent, #fff); }
+.poster-inner { width: 100%; height: 100%;
+  border-radius: 2px; overflow: hidden; position: relative;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.8), 0 4px 12px rgba(0,0,0,0.6);
+  transition: box-shadow 0.4s;
+}
+.poster-img { background: #000 var(--poster-image) center center / cover no-repeat; width: 100%; height: 100%; }
+
+.poster-ph { width: 100%; height: 100%;
+  background: var(--poster-bg, linear-gradient(180deg, #1a0828 0%, #4a0838 100%));
+  position: relative; display: flex; flex-direction: column;
+  color: var(--poster-color, #fff); padding: 24px 20px; overflow: hidden;
+}
+.poster-ph::before { content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.15) 0%, transparent 50%),
+              repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0 2px, transparent 2px 4px);
+  pointer-events: none; z-index: 1;
+}
+.poster-ph .genre-stripe { font-family: 'Press Start 2P', monospace; font-size: 9px;
+  color: var(--poster-accent, var(--neon-amber)); letter-spacing: 3px; margin-bottom: 8px; z-index: 2;
+}
+.poster-ph .poster-big-symbol { position: absolute; top: 40%; left: 50%;
+  transform: translate(-50%, -50%); font-size: 160px; line-height: 1;
+  opacity: 0.5; z-index: 1; font-weight: 900;
+  color: var(--poster-accent, #fff);
+  text-shadow: 0 4px 20px rgba(0,0,0,0.6); letter-spacing: -8px;
+}
+.poster-ph .poster-big-symbol.kanji { font-family: 'Shippori Mincho B1', serif; }
+.poster-ph .poster-big-symbol.en { font-family: 'Bebas Neue', sans-serif; letter-spacing: -5px; }
+.poster-ph .poster-title { margin-top: auto; z-index: 3; position: relative; }
+.poster-ph .p-title-main { font-family: 'Shippori Mincho B1', serif; font-size: 38px; font-weight: 800; line-height: 0.95;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.7); margin-bottom: 4px;
+}
+.poster-ph .p-title-main.en { font-family: 'Bebas Neue', sans-serif; font-size: 48px; letter-spacing: 1px; }
+.poster-ph .p-title-sub { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 15px; opacity: 0.9; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
+.poster-ph .p-tag { font-family: 'DotGothic16', monospace; font-size: 11px; margin-top: 8px; letter-spacing: 1px;
+  color: var(--poster-accent, #fff); background: rgba(0,0,0,0.5); padding: 4px 8px; display: inline-block;
+}
+.poster-ph .mj-slot { position: absolute; top: 14px; right: 14px; z-index: 5;
+  background: rgba(0,0,0,0.7); color: var(--neon-cyan);
+  border: 1px dashed var(--neon-cyan); padding: 3px 6px;
+  font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 1px; opacity: 0.6;
+}
+.poster-date { position: absolute; bottom: 20px; right: 14px;
+  background: #000; color: var(--poster-accent, #fff);
+  border: 2px solid var(--poster-accent, #fff); padding: 6px 10px;
+  font-family: 'Press Start 2P', monospace; font-size: 10px; letter-spacing: 1px;
+  z-index: 3; box-shadow: 0 4px 12px rgba(0,0,0,0.7); transform: rotate(3deg);
+}
+
+.tape { position: absolute; width: 70px; height: 22px;
+  background: rgba(232,197,71,0.6);
+  border-left: 1px dashed rgba(0,0,0,0.25); border-right: 1px dashed rgba(0,0,0,0.25);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 5;
+}
+.tape.top-l { top: -10px; left: -18px; transform: rotate(-22deg); }
+.tape.top-r { top: -10px; right: -18px; transform: rotate(22deg); }
+.tape.bot-l { bottom: 20px; left: -18px; transform: rotate(65deg); width: 50px; }
+.push-pin { position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+  width: 16px; height: 16px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff9b9b, #c0392b 55%, #6b1a14);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.6), inset -2px -2px 3px rgba(0,0,0,0.4); z-index: 5;
+}
+.scroll-indicator { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 8px; z-index: 15;
+}
+.scroll-dot { width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.25); transition: all 0.3s; cursor: pointer;
+}
+.scroll-dot.active { background: var(--org-accent, #fff);
+  box-shadow: 0 0 10px var(--org-accent, #fff); transform: scale(1.3);
+}
+
+/* ========= EVENT DETAIL MODAL ========= */
+.event-modal-overlay { position: fixed; inset: 0;
+  background: rgba(0,0,0,0.92); backdrop-filter: blur(8px);
+  z-index: 400; opacity: 0; pointer-events: none;
+  transition: opacity 0.4s;
+  display: flex; align-items: center; justify-content: center; padding: 30px;
+}
+.event-modal-overlay.open { opacity: 1; pointer-events: auto; }
+.event-modal { max-width: 960px; width: 100%; max-height: 90vh;
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 0;
+  background: #0a0812; border: 1px solid rgba(255,255,255,0.2); overflow: hidden;
+  transform: scale(0.95); transition: transform 0.4s cubic-bezier(0.3,1.3,0.4,1);
+  position: relative;
+}
+.event-modal-overlay.open .event-modal { transform: scale(1); }
+.event-modal-poster { padding: 30px; background: #050308; display: flex; align-items: center; justify-content: center; }
+.event-modal-poster .poster { width: 100%; max-width: 300px; transform: none; }
+.event-modal-poster .poster:hover { transform: none; }
+.event-modal-detail { padding: 36px 32px; overflow-y: auto; }
+.event-modal-close { position: absolute; top: 14px; right: 20px;
+  background: none; border: none; color: #fff; font-size: 28px;
+  cursor: pointer; opacity: 0.6; z-index: 10;
+}
+.event-modal-close:hover { opacity: 1; }
+.em-cat { font-family: 'Press Start 2P', monospace; font-size: 9px;
+  color: var(--ev-accent, var(--neon-cyan)); letter-spacing: 2px; margin-bottom: 10px;
+}
+.em-title { font-family: 'Shippori Mincho B1', serif; font-size: 38px; font-weight: 800; line-height: 1; margin-bottom: 10px; }
+.em-title.en { font-family: 'Bebas Neue', sans-serif; font-size: 52px; letter-spacing: 2px; }
+.em-tag { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 16px; opacity: 0.85;
+  margin-bottom: 22px; padding-left: 10px; border-left: 2px solid var(--ev-accent, #fff);
+}
+.em-meta { display: grid; grid-template-columns: 80px 1fr; gap: 10px 14px; margin-bottom: 22px;
+  padding: 14px 0; border-top: 1px dashed rgba(255,255,255,0.2); border-bottom: 1px dashed rgba(255,255,255,0.2);
+}
+.em-meta dt { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--ev-accent, #fff); letter-spacing: 2px; padding-top: 2px; }
+.em-meta dd { font-size: 13px; font-weight: 700; }
+.em-body { font-size: 14px; line-height: 1.75; margin-bottom: 26px; color: #d0d0d0; }
+.em-actions { display: flex; gap: 10px; }
+.em-btn { font-family: 'Press Start 2P', monospace; font-size: 10px; letter-spacing: 2px; padding: 14px 20px;
+  background: var(--ev-accent, #fff); color: #000; border: none; cursor: pointer;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.8); transition: all 0.15s;
+}
+.em-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 rgba(0,0,0,0.8); }
+.em-btn.ghost { background: transparent; color: #fff; border: 1.5px solid #fff; box-shadow: 4px 4px 0 var(--ev-accent, #fff); }
+
+/* ========= RESPONSIVE ========= */
+@media (max-width: 800px) {
+  .neon-sign { font-size: 38px; letter-spacing: 5px; }
+  .neon-sub { font-size: 10px; letter-spacing: 5px; }
+  .sign-tag { font-size: 11px; letter-spacing: 2px; }
+  .sign-wrap { max-width: calc(100vw - 180px); padding: 2px 10px 6px; }
+  .shop-top { padding: 24px 12px 0; }
+  .focus-info { padding: 10px 18px 8px; min-height: auto; margin-top: 6px; }
+  .focus-info .fi-short { font-size: 30px; letter-spacing: 4px; }
+  .focus-info .fi-name { font-size: 13px; margin-bottom: 4px; }
+  .focus-info .fi-desc { font-size: 11px; line-height: 1.5; }
+  .focus-info .fi-cta { font-size: 8px; padding: 7px 12px; margin-top: 8px; }
+  .shelf-track .cart { width: 220px; }
+  .shelf-track { padding: 22px calc(50% - 110px) 32px; gap: 18px; }
+  .shelf-nav button { width: 42px; height: 42px; font-size: 18px; }
+  .cart-name-overlay { font-size: var(--cno-size, 22px); padding: 6px 8px 8px; }
+  .cart-name-overlay .cno-sub { font-size: 9px; letter-spacing: 2px; }
+  .poster { width: 260px; }
+  .poster-track { padding: 40px 10vw 60px; gap: 30px; }
+  .scroll-arrow { width: 44px; height: 44px; font-size: 11px; }
+  .scroll-arrow.prev { left: 10px; } .scroll-arrow.next { right: 10px; }
+  .event-modal { grid-template-columns: 1fr; max-height: 94vh; }
+  .event-modal-poster { padding: 20px; }
+  .event-modal-detail { padding: 24px 20px; }
+  .wall-header { padding: 14px 16px; flex-wrap: wrap; gap: 12px; }
+  .wall-org-title { font-size: 16px; }
+  .em-title { font-size: 28px; }
+  .em-title.en { font-size: 38px; }
+  .coming-soon-stamp { font-size: 13px; padding: 7px 10px; border-width: 3px; }
+}
+@media (max-width: 520px) {
+  .neon-sign { font-size: 30px; letter-spacing: 3px; }
+  .neon-sub { font-size: 9px; letter-spacing: 3px; }
+  .sign-wrap { max-width: calc(100vw - 160px); }
+  .shelf-track .cart { width: 190px; }
+  .shelf-track { padding: 18px calc(50% - 95px) 28px; gap: 14px; }
+  .shop { padding-bottom: 16px; }
+  .poster { width: 220px; }
+  .focus-info { padding: 8px 12px 6px; }
+  .focus-info .fi-short { font-size: 26px; letter-spacing: 3px; }
+  .focus-info .fi-name { font-size: 12px; }
+  .focus-info .fi-desc { font-size: 10.5px; }
+}
+
+/* Full-scene image supersedes CSS decorations */
+.floor, .horizon, .crt-tv, .signboard, .boy { display: none !important; }
+
+/* =============================================================
+   COMING SOON State
+   ============================================================= */
+.cart.is-coming-soon .cart-shell {
+  filter: grayscale(0.7) brightness(0.7);
+}
+.cart.is-coming-soon:hover {
+  cursor: help;
+}
+.coming-soon-stamp {
+  position: absolute;
+  top: 38%; left: 50%;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  z-index: 10;
+  pointer-events: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 18px;
+  color: #c9202a;
+  padding: 10px 14px;
+  border: 4px solid #c9202a;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.95);
+  text-align: center;
+  letter-spacing: 2px;
+  line-height: 1.4;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  /* Rubber stamp worn effect */
+  opacity: 0.92;
+}
+.coming-soon-stamp::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 40%, transparent 30%, rgba(255,255,255,0.3) 60%);
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+.cs-toast {
+  position: fixed;
+  bottom: 40px; left: 50%;
+  transform: translateX(-50%) translateY(40px);
+  z-index: 500;
+  background: rgba(6,2,18,0.95);
+  border: 1px solid var(--neon-amber);
+  color: var(--neon-amber);
+  padding: 14px 24px;
+  font-family: 'DotGothic16', monospace;
+  font-size: 13px;
+  letter-spacing: 1px;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.3,1,0.4,1);
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 20px rgba(255,184,0,0.4);
+  max-width: 90%;
+  text-align: center;
+}
+.cs-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.cs-toast::before {
+  content: '◉ ';
+  color: var(--neon-pink);
+}
+
+/* =============================================================
+   TOP NAVIGATION TABS
+   ============================================================= */
+.top-nav {
+  position: fixed;
+  top: 16px; right: 20px;
+  z-index: 350;
+  display: flex;
+  gap: 4px;
+  background: rgba(6,2,18,0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,42,109,0.35);
+  border-radius: 100px;
+  padding: 4px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 30px rgba(255,42,109,0.2);
+}
+.top-nav button {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 100px;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.top-nav button:hover { color: #fff; }
+.top-nav button.active {
+  background: var(--neon-pink);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(255,42,109,0.6);
+}
+body.tab-board .top-nav button.active { background: var(--neon-cyan); color: #000; box-shadow: 0 0 16px rgba(0,245,255,0.6); }
+
+/* When board tab active, hide shop */
+body.tab-board .shop { opacity: 0; pointer-events: none; transform: scale(0.95); filter: blur(8px); }
+body.tab-board .wall-scene:not(.force) { opacity: 0; pointer-events: none; }
+body.tab-board .event-modal-overlay:not(.open) { opacity: 0; pointer-events: none; }
+body.tab-board .board-scene, .board-scene.active { opacity: 1; pointer-events: auto; }
+
+/* =============================================================
+   EVENT BOARD SCENE
+   ============================================================= */
+.board-scene {
+  position: fixed; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.6s, transform 0.6s, filter 0.6s;
+  z-index: 40;
+  overflow: hidden;
+  /* Vintage wood/cork bulletin board background */
+  background:
+    linear-gradient(180deg, rgba(30,15,5,0.55) 0%, rgba(20,10,3,0.35) 50%, rgba(30,15,5,0.7) 100%),
+    /* Cork texture layered */
+    radial-gradient(circle at 20% 30%, rgba(120, 70, 30, 0.4) 0%, transparent 40%),
+    radial-gradient(circle at 70% 60%, rgba(100, 55, 25, 0.5) 0%, transparent 45%),
+    radial-gradient(circle at 45% 80%, rgba(140, 80, 40, 0.3) 0%, transparent 35%),
+    repeating-linear-gradient(127deg, #3a2010 0 2px, #4a2a16 2px 4px, #2e1a08 4px 7px),
+    #2a1808;
+}
+.board-scene::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 10%, rgba(255, 220, 150, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 90%, rgba(0,0,0,0.35) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 1;
+}
+.board-scene::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.7) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.board-header {
+  position: relative;
+  z-index: 10;
+  padding: 72px 40px 16px;
+  text-align: center;
+}
+.board-title {
+  font-family: 'Shippori Mincho B1', serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: #ffe8c4;
+  text-shadow: 2px 2px 0 #000, 0 4px 12px rgba(0,0,0,0.7);
+  letter-spacing: 8px;
+  margin-bottom: 8px;
+}
+.board-title-en {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 8px;
+  color: #c9a961;
+  opacity: 0.9;
+}
+.board-filter {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 0 20px;
+}
+.board-filter button {
+  font-family: 'DotGothic16', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 7px 14px;
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(201, 169, 97, 0.5);
+  color: #c9a961;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(6px);
+}
+.board-filter button:hover { background: rgba(201, 169, 97, 0.2); color: #ffe8c4; }
+.board-filter button.active { background: #c9a961; color: #1a0f08; font-weight: 700; }
+
+/* The board wall with flyers */
+.board-wall {
+  position: relative;
+  z-index: 5;
+  padding: 30px 40px 80px;
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+.board-wall::-webkit-scrollbar { width: 8px; }
+.board-wall::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+.board-wall::-webkit-scrollbar-thumb { background: rgba(201, 169, 97, 0.4); border-radius: 4px; }
+
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 46px 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Individual flyer */
+.flyer {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  cursor: pointer;
+  transform: rotate(var(--tilt, -1deg));
+  transition: transform 0.35s cubic-bezier(0.3, 1.2, 0.4, 1),
+              z-index 0s 0s,
+              box-shadow 0.3s;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.55));
+}
+.flyer:hover {
+  transform: rotate(0deg) scale(1.25) translateY(-10px);
+  z-index: 10;
+  transition-delay: 0s, 0s, 0s;
+  filter: drop-shadow(0 20px 36px rgba(0,0,0,0.85));
+}
+.flyer-inner {
+  width: 100%; height: 100%;
+  background: #0a0a0a;
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    inset 0 0 40px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(255,255,255,0.12);
+}
+.flyer-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ==== Top-left: Club badge (compact) ==== */
+.flyer-org {
+  position: absolute;
+  top: 8px; left: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6.5px;
+  letter-spacing: 1.5px;
+  padding: 4px 7px;
+  background: rgba(0,0,0,0.9);
+  color: var(--fly-accent, #ffdc64);
+  border-left: 2.5px solid var(--fly-accent, #ffdc64);
+  z-index: 3;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+/* ==== Top-right: "開催決定" angled sticker ==== */
+.flyer-stamp {
+  position: absolute;
+  top: 10px; right: -6px;
+  z-index: 3;
+  font-family: 'Shippori Mincho B1', serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1.1;
+  padding: 5px 10px 6px;
+  background: #c0392b;
+  color: #fff;
+  border: 1.5px solid #fff;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+  transform: rotate(6deg);
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+}
+.flyer-stamp.blue { background: #1a4a8f; }
+.flyer-stamp.green { background: #2a7a2a; }
+.flyer-stamp.gold { background: #c9a414; color: #1a0f00; text-shadow: none; }
+
+/* ==== Big date block (top-right corner, rotated ticket) ==== */
+.flyer-date {
+  position: absolute;
+  top: 44px; right: 10px;
+  z-index: 3;
+  background: #fff;
+  border: 2.5px solid #1a1a1a;
+  padding: 6px 10px 7px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6), 4px 4px 0 var(--fly-accent, #ffdc64);
+  transform: rotate(-4deg);
+  line-height: 0.92;
+}
+.flyer-date .fd-num {
+  font-family: 'Anton', 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  letter-spacing: -1.5px;
+  color: #c0392b;
+  display: block;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+.flyer-date .fd-num .fd-sep {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.5em;
+  vertical-align: 0.3em;
+  margin: 0 -1px;
+  color: #1a1a1a;
+}
+.flyer-date .fd-dow {
+  display: inline-block;
+  font-family: 'Shippori Mincho B1', serif;
+  font-size: 10px;
+  font-weight: 800;
+  background: #1a1a1a;
+  color: #fff;
+  padding: 2px 8px;
+  margin-top: 4px;
+  letter-spacing: 2px;
+}
+.flyer-date.saturday .fd-num { color: #1a4a8f; }
+.flyer-date.sunday .fd-num { color: #c0392b; }
+
+/* ==== Recurring/non-standard date fallback ==== */
+.flyer-date-recur {
+  position: absolute;
+  top: 44px; right: 10px;
+  z-index: 3;
+  background: rgba(255,255,255,0.96);
+  border: 2.5px solid var(--fly-accent, #ffdc64);
+  padding: 8px 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.55), 3px 3px 0 rgba(0,0,0,0.4);
+  transform: rotate(-3deg);
+  font-family: 'Shippori Mincho B1', serif;
+  font-size: 11px;
+  font-weight: 800;
+  color: #1a1a1a;
+  max-width: 100px;
+  line-height: 1.2;
+}
+
+/* ==== Accent color bar above info block ==== */
+.flyer-accent-bar {
+  position: absolute;
+  bottom: 118px; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg,
+    var(--fly-accent, #ffdc64) 0%,
+    var(--fly-accent, #ffdc64) 30%,
+    transparent 30%, transparent 34%,
+    var(--fly-accent, #ffdc64) 34%, var(--fly-accent, #ffdc64) 38%,
+    transparent 38%, transparent 42%,
+    var(--fly-accent, #ffdc64) 42%);
+  z-index: 2;
+  opacity: 0.9;
+}
+
+/* ==== Bottom: Title + tagline + info panel ==== */
+.flyer-info {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 46px 12px 10px;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.55) 18%, rgba(0,0,0,0.98) 55%);
+  color: #fff;
+  z-index: 2;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+.flyer-subtitle {
+  font-family: 'DotGothic16', monospace;
+  font-size: 9.5px;
+  letter-spacing: 2.5px;
+  color: var(--fly-accent, #ffdc64);
+  margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 400;
+}
+.flyer-title {
+  font-family: 'Shippori Mincho B1', serif;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.02;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+  text-shadow:
+    0 3px 4px rgba(0,0,0,0.98),
+    0 0 10px rgba(0,0,0,0.6),
+    3px 3px 0 var(--fly-accent, #ffdc64);
+}
+.flyer-title.en {
+  font-family: 'Anton', 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 1px;
+  font-weight: 400;
+}
+.flyer-tagline {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.35;
+  letter-spacing: 0.3px;
+  opacity: 0.95;
+  text-shadow:
+    0 2px 4px rgba(0,0,0,0.95),
+    0 0 10px rgba(0,0,0,0.6);
+  padding-left: 10px;
+  border-left: 2px solid var(--fly-accent, #ffdc64);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-height: 32px;
+}
+.flyer-details {
+  display: grid;
+  gap: 3px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,0.25);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.3px;
+}
+.flyer-details .fd-row { display: flex; gap: 7px; align-items: baseline; }
+.flyer-details .fd-row .lbl {
+  font-weight: 700;
+  color: var(--fly-accent, #ffdc64);
+  width: 38px;
+  flex-shrink: 0;
+  font-size: 8px;
+  letter-spacing: 1.2px;
+}
+.flyer-details .fd-row .val {
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* ==== Tape / pin decorations ==== */
+.flyer-pin, .flyer-tape {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+}
+.flyer-pin {
+  top: -9px; left: 50%; transform: translateX(-50%);
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff9b9b, #c0392b 55%, #6b1a14);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.7), inset -2px -2px 3px rgba(0,0,0,0.4);
+}
+.flyer-pin.yellow { background: radial-gradient(circle at 35% 30%, #ffe89b, #c9a414 55%, #6b5c14); }
+.flyer-pin.blue { background: radial-gradient(circle at 35% 30%, #9bccff, #2c72c0 55%, #14406b); }
+.flyer-pin.green { background: radial-gradient(circle at 35% 30%, #9bff9b, #2cb232 55%, #146b1a); }
+.flyer-tape {
+  width: 60px; height: 18px;
+  background: rgba(255, 220, 120, 0.55);
+  border-left: 1px dashed rgba(0,0,0,0.25);
+  border-right: 1px dashed rgba(0,0,0,0.25);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.35);
+}
+.flyer-tape.top-l { top: -9px; left: -16px; transform: rotate(-25deg); }
+.flyer-tape.top-r { top: -9px; right: -16px; transform: rotate(25deg); }
+.flyer-tape.green { background: rgba(146, 214, 160, 0.55); }
+.flyer-tape.pink  { background: rgba(237, 143, 163, 0.55); }
+
+/* =============================================================
+   BOARD RESPONSIVE
+   ============================================================= */
+@media (max-width: 800px) {
+  .board-title { font-size: 26px; letter-spacing: 5px; }
+  .board-title-en { font-size: 11px; letter-spacing: 5px; }
+  .board-header { padding: 60px 16px 12px; }
+  .board-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 32px 18px; }
+  .flyer:hover { transform: rotate(0deg) scale(1.15) translateY(-6px); }
+  .flyer-title { font-size: 14px; }
+  .flyer-title.en { font-size: 18px; }
+  .flyer-date .fd-num { font-size: 24px; }
+  .flyer-stamp { font-size: 8.5px; padding: 4px 8px 5px; }
+  .top-nav { top: 10px; padding: 3px; }
+  .top-nav button { font-size: 9px; padding: 8px 14px; letter-spacing: 1px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ========= TOP NAVIGATION ========= -->
+<nav class="top-nav" id="top-nav">
+  <button class="active" data-tab="shop" onclick="switchTab('shop')">◉ SHOP</button>
+  <button data-tab="board" onclick="switchTab('board')">◉ BOARD</button>
+</nav>
+
+<div class="stage">
+  <!-- ========= SHOP SCENE ========= -->
+  <div class="shop" id="shop">
+    <div class="shop-top">
+      <div class="sign-wrap">
+        <div class="neon-sign">CAMPUS <span class="amp">&amp;</span> CARTRIDGE</div>
+        <div class="neon-sub">学 生 団 体 カ ー ト リ ッ ジ 専 門 店</div>
+        <div class="sign-tag">◉ OPEN 24 / 7 ◉ SINCE 2026 ◉ 20 CLUBS</div>
+      </div>
+      <div class="shelf-categories" id="cats"></div>
+    </div>
+    <div class="shop-bottom">
+      <div class="shelf-wrap">
+        <div class="shelf-label">
+          <span class="tag">&gt; STUDENT CLUB INDEX</span>
+          <span class="line"></span>
+          <span class="count" id="cart-count">20 CLUBS</span>
+        </div>
+        <div class="shelf" id="shelf">
+          <div class="shelf-edge left"></div>
+          <div class="shelf-track" id="shelf-track"></div>
+          <div class="shelf-edge right"></div>
+          <div class="shelf-nav">
+            <button onclick="scrollShelf(-1)" aria-label="前へ">◀</button>
+            <button onclick="scrollShelf(1)" aria-label="次へ">▶</button>
+          </div>
+        </div>
+      </div>
+      <div class="focus-info" id="focus-info"></div>
+    </div>
+  </div>
+
+  <!-- ========= FIXED DECOR ========= -->
+  <div class="fixed-deco">
+    <div class="floor"></div>
+    <div class="horizon"></div>
+    <div class="crt-tv">
+      <div class="crt-screen">
+        <div>▶ DEMO</div>
+        <div style="font-size:15px; margin:4px 0;" id="tv-title">PULSE</div>
+        <div>LV.<span class="blink">1</span></div>
+        <div id="tv-org">© 1988</div>
+      </div>
+    </div>
+    <div class="signboard">
+      <div class="sb">＼ 今週の ／<br><b>▸ 新作入荷</b><br>INSERT <b>★</b> PLAY</div>
+    </div>
+    <div class="boy" id="boy">
+      <img class="boy-img" id="boy-img" src="" alt="少年" style="display:none;">
+      <div class="boy-placeholder" id="boy-placeholder">
+        <div class="bp-frame">
+          <div class="bp-label">[ MIDJOURNEY ]</div>
+          <div class="bp-icon">🧍</div>
+          <div class="bp-caption">BOY IMAGE<br>HERE</div>
+        </div>
+      </div>
+    </div>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+  </div>
+
+  <!-- ========= EVENT BOARD SCENE (TAB) ========= -->
+  <div class="board-scene" id="board-scene">
+    <div class="board-header">
+      <div class="board-title">イベント掲示板</div>
+      <div class="board-title-en">EVENT BULLETIN BOARD — ALL 60 FLYERS</div>
+      <div class="board-filter" id="board-filter"></div>
+    </div>
+    <div class="board-wall">
+      <div class="board-grid" id="board-grid"></div>
+    </div>
+  </div>
+
+  <!-- ========= POSTER WALL SCENE ========= -->
+  <div class="wall-scene" id="wall-scene">
+    <div class="wall-bg"></div>
+    <div class="spotlights">
+      <div class="spotlight-fix"></div><div class="spotlight-fix"></div><div class="spotlight-fix"></div>
+      <div class="spotlight-fix"></div><div class="spotlight-fix"></div>
+    </div>
+    <div class="wall-graffiti g1">GAME CLUB 87</div>
+    <div class="wall-graffiti g2">next level ↗</div>
+    <div class="wall-graffiti g3">[SCAN ME]</div>
+    <div class="torn-poster tp1"></div>
+    <div class="torn-poster tp2"></div>
+    <div class="torn-poster tp3"></div>
+    <div class="wall-header">
+      <div class="left">
+        <button class="back-btn" onclick="backToShop()">◀ HOME</button>
+        <div class="wall-cart-mini" id="wall-cart-mini"></div>
+        <div>
+          <div class="wall-org-title" id="wall-org-title">—</div>
+          <div class="wall-org-sub" id="wall-org-sub">—</div>
+        </div>
+      </div>
+      <div class="wall-counter" id="wall-counter">01 / 03</div>
+    </div>
+    <div class="wall-body">
+      <button class="scroll-arrow prev" onclick="scrollPosters(-1)">◀</button>
+      <button class="scroll-arrow next" onclick="scrollPosters(1)">▶</button>
+      <div class="poster-track" id="poster-track"></div>
+      <div class="scroll-indicator" id="scroll-indicator"></div>
+    </div>
+  </div>
+
+  <!-- ========= EVENT DETAIL MODAL ========= -->
+  <div class="event-modal-overlay" id="event-modal-overlay" onclick="if(event.target===this)closeEventModal()">
+    <div class="event-modal" id="event-modal">
+      <button class="event-modal-close" onclick="closeEventModal()">×</button>
+      <div class="event-modal-poster" id="em-poster"></div>
+      <div class="event-modal-detail" id="em-detail"></div>
+    </div>
+  </div>
+
+  <div class="flash" id="flash"></div>
+</div>
+
+<script>
+// =====================================================
+// 20 organizations × 3 events each = 60 events
+// =====================================================
+const orgs = [
+  // --- MUSIC ---
+  { id:1, featured:true, cat:'music', slug:'pulse', name:'軽音楽サークル PULSE', short:'PULSE',
+    description:'学内最大規模の軽音サークル。ロック・ポップ中心、年4回ライブ。', accent:'#ff2a6d',
+    cart:{ image:'images/pulse-cart.jpg',nameOverlay:{text:'PULSE',font:'\'Anton\', \'Bebas Neue\', sans-serif',color:'#fff',size:'42px',spacing:'6px',weight:'400',shadow:'rgba(255,42,109,0.8)',sub:'ELECTRIC / ROCK CLUB'}, body:'#ffd730', bodyDark:'#a37c18',
+      strip:{bg:'#cc0018',color:'#fff',label:'FAMIKON 軽音 SERIES'},
+      art:{bg:'linear-gradient(135deg, #ff006e 0%, #8338ec 55%, #3a86ff 100%)',color:'#ffdc00',symbol:'⚡',cls:'',deco:'rays'},
+      title:{bg:'#000',color:'#ffdc00',main:'PULSE',sub:'ROCK LIVE ACTION',cls:''},
+      bottom:{bg:'#fff',color:'#000',left:'HVC-PS',right:'©1988 PULSE'},
+      code:'HVC-PS', tag:'NEW', glow:'#ff2a6d' },
+    events:[
+      
+      {title:'SPRING LIVE',sub:'新歓ライブ',date:'05.16 (金) 18:30',venue:'G-Messe高崎 ミニホール',tagline:'音で、キャンパスが揺れる夜。',body:'学内6バンド＋他大ゲスト2組。入場無料、軽食ブース出店。終演後は中央前橋で打ち上げ。',posterImage:'images/pulse-1.jpg',posterBg:'linear-gradient(180deg, #1a0032 0%, #ff2a6d 100%)',accent:'#ffdc00',symbol:'⚡',symbolCls:'en',titleEn:true},
+      {title:'榛名湖 OPEN AIR',sub:'野外ライブ',date:'08.02 (土) 15:00',venue:'榛名湖畔ステージ',tagline:'湖面に響かせる、夏のコード。',body:'榛名観光協会共催の野外ライブ。カヌー体験とセット。バス送迎あり（高崎駅西口発）。',posterImage:'images/pulse-2.jpg',posterBg:'linear-gradient(180deg, #1a5fa3 0%, #ffb800 100%)',accent:'#4ac9e8',symbol:'☀',symbolCls:'en',titleEn:true},
+      {title:'秋桜祭 FINAL',sub:'学園祭ヘッドライナー',date:'11.02 (日) 19:00',venue:'大学前橋キャンパス 特設ステージ',tagline:'一夜限り、頂点のステージ。',body:'秋桜祭最終日の閉幕ライブ。本年度MVPバンド演出。花火連動。',posterImage:'images/pulse-3.jpg',posterBg:'linear-gradient(135deg, #6b0028 0%, #ff4a2a 100%)',accent:'#ff2a6d',symbol:'♛',symbolCls:'en',titleEn:true}
+    
+    ]},
+  { id:2, cat:'music', slug:'wind', name:'吹奏楽部', short:'WIND',
+    description:'40名編成、定期演奏会と学園祭ステージを軸に活動。', accent:'#ffdc64',
+    cart:{ image:'images/wind-cart.jpg',nameOverlay:{text:'WIND OCTAVE',font:'\'Cinzel\', \'DM Serif Display\', serif',color:'#f4d96b',size:'26px',spacing:'4px',weight:'800',shadow:'rgba(10,26,74,0.9)',sub:'BRASS ENSEMBLE'}, body:'#c9a961', bodyDark:'#8b7540',
+      strip:{bg:'#0a1a4a',color:'#ffdc64',label:'FAMIKON シンフォニー SERIES'},
+      art:{bg:'linear-gradient(180deg, #0a1a4a 0%, #2a3a7a 100%)',color:'#ffdc64',symbol:'♪',cls:'',deco:'stars'},
+      title:{bg:'#0a1a4a',color:'#ffdc64',main:'WIND ENSEMBLE',sub:'吹奏楽部',cls:''},
+      bottom:{bg:'#ffdc64',color:'#0a1a4a',left:'HVC-WE',right:'©1987 HIBIKI'},
+      code:'HVC-WE', tag:'', glow:'#ffdc64' },
+    events:[
+      
+      {title:'第48回 定期演奏会',sub:'REGULAR CONCERT',date:'06.29 (日) 14:00',venue:'群馬音楽センター',tagline:'一音で、空気が澄む。',body:'40名編成・全8曲。クラシックから映画音楽まで。OB指揮者招聘、入場無料・整理券制。',posterImage:'images/wind-1.jpg',posterBg:'linear-gradient(180deg, #0a1a4a 0%, #c9a961 100%)',accent:'#ffdc64',symbol:'♪',symbolCls:'',titleEn:false},
+      {title:'前橋けやき並木 演奏',sub:'ストリート演奏',date:'10.11 (土) 13:00',venue:'前橋市けやき並木通り',tagline:'秋風に、金管を乗せる。',body:'前橋まつり協賛のストリート演奏。観客参加型のコーナーあり。',posterImage:null,posterBg:'linear-gradient(180deg, #4a1808 0%, #ed8f2a 100%)',accent:'#ffb800',symbol:'♫',symbolCls:'',titleEn:false},
+      {title:'X\'MAS MINI CONCERT',sub:'聖夜のミニ演奏会',date:'12.21 (日) 16:00',venue:'高崎シティギャラリー ロビー',tagline:'少し早い、贈り物。',body:'クリスマス楽曲中心のミニ演奏会。一般来場歓迎、ホットココア配布。',posterImage:null,posterBg:'linear-gradient(180deg, #0a2820 0%, #8b0010 100%)',accent:'#ffdc64',symbol:'✦',symbolCls:'en',titleEn:true}
+    
+    ]},
+  { id:3, cat:'music', slug:'harmonics', name:'アカペラ HARMONICS', short:'HARMONICS',
+    description:'5〜8名のグループ複数がカバー・オリジナル両方を扱う。', accent:'#ed8fa3',
+    cart:{ image:'images/harmonics-cart.jpg',nameOverlay:{text:'Harmonics',font:'\'Cormorant Garamond\', \'DM Serif Display\', serif',color:'#fff8f0',size:'40px',spacing:'2px',weight:'700',style:'italic',shadow:'rgba(90,42,58,0.8)',sub:'-- A CAPPELLA --'}, body:'#f5e8d5', bodyDark:'#c9b89a',
+      strip:{bg:'#ed8fa3',color:'#fff',label:'FAMIKON ハーモニー SERIES'},
+      art:{bg:'linear-gradient(180deg, #fff 0%, #ed8fa3 100%)',color:'#5a2a3a',symbol:'♫',cls:'small',deco:'dots'},
+      title:{bg:'#5a2a3a',color:'#fff',main:'HARMONICS',sub:'VOICE ENSEMBLE',cls:''},
+      bottom:{bg:'#fff',color:'#5a2a3a',left:'HVC-HM',right:'©1989 HARMO'},
+      code:'HVC-HM', tag:'', glow:'#ed8fa3' },
+    events:[
+      
+      {title:'SUMMER VOICE',sub:'夏のアカペラ祭',date:'07.19 (土) 15:00',venue:'ヤマダグリーンドーム 小ホール',tagline:'声だけで、世界が出来る。',body:'5グループによるミニライブ。J-POP、洋楽カバー、オリジナル曲。観覧無料。',posterImage:'images/harmonics-1.jpg',posterBg:'linear-gradient(180deg, #fff 0%, #ed8fa3 60%, #c9668a 100%)',accent:'#5a2a3a',symbol:'♫',symbolCls:'',titleEn:true},
+      {title:'敷島公園 ストリート',sub:'野外ストリートライブ',date:'09.27 (土) 14:00',venue:'敷島公園ばら園前広場',tagline:'道ゆく人の、5分を奪う。',body:'ばら園開花期に合わせた3時間連続ストリートライブ。楽譜配布、投げ銭歓迎。',posterImage:null,posterBg:'linear-gradient(180deg, #ffdc64 0%, #ed8fa3 100%)',accent:'#ed8fa3',symbol:'♬',symbolCls:'',titleEn:true},
+      {title:'CHRISTMAS CAROL',sub:'キャロル夜会',date:'12.21 (日) 18:30',venue:'中央前橋駅前 中庭',tagline:'クリスマスイブの、前夜に。',body:'屋外でのキャロル演奏会。ホットドリンク配布、キャンドル点灯式あり。',posterImage:null,posterBg:'linear-gradient(180deg, #0a1a4a 0%, #8b1818 100%)',accent:'#ffdc64',symbol:'✧',symbolCls:'',titleEn:true}
+    
+    ]},
+  { id:4, cat:'music', slug:'owl', name:'ジャズ研 NIGHT OWL', short:'NIGHT OWL',
+    description:'ジャズ・ブルースを主軸に、夜の校舎で活動する小規模サークル。', accent:'#e8d8a0',
+    cart:{ image:'images/owl-cart.jpg',nameOverlay:{text:'Night Owl',font:'\'Playfair Display\', \'DM Serif Display\', serif',color:'#f4d58a',size:'36px',spacing:'1px',weight:'900',style:'italic',shadow:'rgba(0,0,0,0.95)',sub:'JAZZ RESEARCH SOCIETY'}, body:'#1a1a1a', bodyDark:'#000',
+      strip:{bg:'#e8d8a0',color:'#1a1a1a',label:'FAMIKON ジャズ SERIES'},
+      art:{bg:'linear-gradient(180deg, #2a1810 0%, #000 100%)',color:'#e8d8a0',symbol:'♭',cls:'',deco:'scan'},
+      title:{bg:'#e8d8a0',color:'#1a1a1a',main:'NIGHT OWL',sub:'JAZZ SESSIONS',cls:''},
+      bottom:{bg:'#1a1a1a',color:'#e8d8a0',left:'HVC-NO',right:'©1987 OWL'},
+      code:'HVC-NO', tag:'RARE', glow:'#e8d8a0' },
+    events:[
+      
+      {title:'LIVE AT MIDNIGHT',sub:'深夜のセッション',date:'09.13 (土) 22:00',venue:'高崎 OPA地下 Jazz Spot 岸',tagline:'深夜の店に、煙草と音だけ残る。',body:'スタンダードナンバー中心のジャズライブ。22時開演、ワンドリンク制。ダンスフロアあり。',posterImage:'images/owl-1.jpg',posterBg:'linear-gradient(180deg, #1a0a00 0%, #4a2810 100%)',accent:'#e8d8a0',symbol:'♭',symbolCls:'',titleEn:true},
+      {title:'高崎JAZZ STREET 参加',sub:'ストリート連動企画',date:'10.11 - 12',venue:'高崎市中心街 各所',tagline:'街じゅうが、ステージになる日。',body:'高崎ジャズストリート学生部門に3ユニットで参加。巡回バス運行。',posterImage:null,posterBg:'linear-gradient(180deg, #3a1810 0%, #c9a961 100%)',accent:'#ffb800',symbol:'♪',symbolCls:'',titleEn:true},
+      {title:'JAM SESSION',sub:'オープンジャム',date:'毎月第2土曜 20:00',venue:'部室（2号館B1）',tagline:'楽器持参、腕試し歓迎。',body:'初心者ゾーン／上級者ゾーンで別室進行。楽譜は即興。ドリンク持込可。',posterImage:null,posterBg:'linear-gradient(135deg, #2a1810 0%, #8b5a2b 100%)',accent:'#e8d8a0',symbol:'~',symbolCls:'',titleEn:true}
+    
+    ]},
+
+  // --- TECH / ACADEMIC ---
+  { id:5, featured:true, cat:'tech', slug:'dev', name:'プログラミング同好会', short:'DEV CLUB',
+    description:'ハッカソン・勉強会・コンテスト参加がメイン。初心者歓迎。', accent:'#00ff88',
+    cart:{ image:'images/dev-cart.jpg',nameOverlay:{text:'DEV_CLUB',font:'\'Press Start 2P\', \'VT323\', monospace',color:'#5dff8c',size:'18px',spacing:'3px',weight:'400',shadow:'rgba(0,60,20,1)',sub:'> INITIALIZING...'}, body:'#4a4a4a', bodyDark:'#2a2a2a',
+      strip:{bg:'#00cc6a',color:'#000',label:'FAMIKON テック SERIES'},
+      art:{bg:'#020a05',color:'#00ff88',symbol:'{}',cls:'mono',deco:'grid'},
+      title:{bg:'#00ff88',color:'#000',main:'DEV CLUB',sub:'CODE INSTITUTE',cls:''},
+      bottom:{bg:'#000',color:'#00ff88',left:'HVC-DV',right:'©1991 DEV'},
+      code:'HVC-DV', tag:'HOT', glow:'#00ff88' },
+    events:[
+      
+      {title:'HACK 48:00',sub:'群馬ハッカソン',date:'08.08 (金) 10:00 〜 08.10 (日) 10:00',venue:'情報棟 Lab-3',tagline:'48時間で、未来を書き換える。',body:'賞金総額30万円。副賞に県内IT企業のインターン枠。食事・ドリンク支給、仮眠室あり。',posterImage:'images/dev-1.jpg',posterBg:'linear-gradient(180deg, #020a05 0%, #00ff88 100%)',accent:'#00ff88',symbol:'48:00',symbolCls:'en',titleEn:true},
+      {title:'前橋 STARTUP PITCH',sub:'スタートアップピッチ夜会',date:'10.24 (金) 19:00',venue:'前橋BOOKSHOP ROUTE',tagline:'アイデアを、プロトタイプに。',body:'学生起業家のピッチ。県内VC・先輩起業家が審査。軽食・ドリンク込。',posterImage:'images/dev-2.jpg',posterBg:'linear-gradient(135deg, #0a0a3a 0%, #00ff88 100%)',accent:'#00ff88',symbol:'$',symbolCls:'en',titleEn:true},
+      {title:'AI WORKSHOP',sub:'生成AIハンズオン',date:'毎週水曜 18:30',venue:'情報棟 Lab-1',tagline:'AIと、遊ぶ。',body:'生成AIを週替わりで触る勉強会。各回簡単なプロジェクト制作、PCレンタルあり。',posterImage:'images/dev-3.jpg',posterBg:'linear-gradient(135deg, #1a0a3a 0%, #3a0a5a 100%)',accent:'#00f5ff',symbol:'AI',symbolCls:'en',titleEn:true}
+    
+    ]},
+  { id:6, comingSoon:true, cat:'tech', slug:'robo', name:'ロボコン研究部', short:'ROBOCON',
+    description:'自作ロボットで競技する体育会系技術団体。年間5大会参加。', accent:'#ff4a2a',
+    cart:{ image:null, body:'#8b1a1a', bodyDark:'#5a0f0f',
+      strip:{bg:'#0a0a0a',color:'#fff',label:'FAMIKON メカ SERIES'},
+      art:{bg:'linear-gradient(180deg, #3a3a3a 0%, #0a0a0a 100%)',color:'#ff4a2a',symbol:'⚙',cls:'',deco:'scan'},
+      title:{bg:'#ff4a2a',color:'#000',main:'ROBOCON',sub:'WAR OF MACHINES',cls:''},
+      bottom:{bg:'#000',color:'#ff4a2a',left:'HVC-RB',right:'©1990 IRON'},
+      code:'HVC-RB', tag:'', glow:'#ff4a2a' },
+    events:[
+      
+      {title:'桐生ROBOCON GP',sub:'学内ロボット対抗戦',date:'10.04 (土) 10:00',venue:'桐生 市民体育館',tagline:'鉄は、冷たく熱い。',body:'自作ロボット4チーム対抗トーナメント。桐生工業高校との合同観戦会。',posterImage:null,posterBg:'linear-gradient(135deg, #3a3a3a 0%, #ff4a2a 100%)',accent:'#ff4a2a',symbol:'⚙',symbolCls:'',titleEn:true},
+      {title:'NHK ROBOCON',sub:'全国大会遠征',date:'11.15 - 16',venue:'両国国技館',tagline:'全国で、ぶつかる。',body:'NHK学生ロボコン出場。応援バス運行（高崎駅発）、学内中継鑑賞会あり。',posterImage:null,posterBg:'linear-gradient(180deg, #000 0%, #c0392b 100%)',accent:'#ff4a2a',symbol:'⚔',symbolCls:'en',titleEn:true},
+      {title:'新入生メカ教室',sub:'ロボ製作体験',date:'04.19 - 05.17 (毎週土)',venue:'工房棟',tagline:'初めてのハンダゴテ、持たせます。',body:'5週連続の製作教室。3Dプリンタ、工具使用法も習得。完成したロボットは持ち帰り可。',posterImage:null,posterBg:'linear-gradient(135deg, #2a2a2a 0%, #5a2a0a 100%)',accent:'#ff8f3c',symbol:'✦',symbolCls:'en',titleEn:true}
+    
+    ]},
+  { id:7, comingSoon:true, cat:'tech', slug:'debate', name:'弁論部', short:'SPEECH',
+    description:'大学対抗弁論大会で20年連続入賞の名門団体。', accent:'#c9a961',
+    cart:{ image:null, body:'#f0e8d0', bodyDark:'#b8ad88',
+      strip:{bg:'#4a0818',color:'#e8d8a0',label:'FAMIKON 論壇 SERIES'},
+      art:{bg:'linear-gradient(180deg, #2a1828 0%, #4a0818 100%)',color:'#c9a961',symbol:'論',cls:'kanji',deco:'stars'},
+      title:{bg:'#4a0818',color:'#c9a961',main:'弁論部',sub:'RHETORIC ARTS',cls:'jp'},
+      bottom:{bg:'#c9a961',color:'#4a0818',left:'HVC-DB',right:'©1984 LOGOS'},
+      code:'HVC-DB', tag:'', glow:'#c9a961' },
+    events:[
+      
+      {title:'第43回 弁論大会',sub:'RHETORIC GP',date:'06.21 (土) 13:00',venue:'大学 大講堂',tagline:'言葉は、鋭利な刃物だ。',body:'関東甲信越学生弁論選手権。テーマ「二〇四〇年、地方教育」。観覧自由、投票権あり。',posterImage:null,posterBg:'linear-gradient(180deg, #1a0810 0%, #4a0818 100%)',accent:'#c9a961',symbol:'論',symbolCls:'kanji',titleEn:false},
+      {title:'前橋 DEBATE NIGHT',sub:'公開ディベート',date:'09.27 (土) 18:30',venue:'前橋プラザ元気21 会議室',tagline:'賛成か、反対か。',body:'市民参加型の公開ディベート。時事テーマ、観客は投票権を持つ。',posterImage:null,posterBg:'linear-gradient(180deg, #0a0830 0%, #2a1828 100%)',accent:'#c9a961',symbol:'⚖',symbolCls:'',titleEn:true},
+      {title:'SPEAKING CLUB',sub:'新歓スピーチ教室',date:'04.14 (月) - 05.12 毎週月曜 18:00',venue:'弁論部室（3号館201）',tagline:'人前で話す、練習を。',body:'新入生向け5回のスピーチ講座。即興・準備スピーチ両方。終了時に発表会。',posterImage:null,posterBg:'linear-gradient(135deg, #1a1030 0%, #4a2850 100%)',accent:'#c9a961',symbol:'❝',symbolCls:'en',titleEn:true}
+    
+    ]},
+  { id:8, comingSoon:true, cat:'tech', slug:'math', name:'数理研究会', short:'MATHEMATICA',
+    description:'数学の問題を解き・作り・競う静かな研究団体。', accent:'#4ac9e8',
+    cart:{ image:null, body:'#1a5fa3', bodyDark:'#0a3a6a',
+      strip:{bg:'#fff',color:'#1a5fa3',label:'FAMIKON マスマ SERIES'},
+      art:{bg:'linear-gradient(135deg, #0a3a6a 0%, #1a5fa3 100%)',color:'#fff',symbol:'π',cls:'',deco:'grid'},
+      title:{bg:'#fff',color:'#1a5fa3',main:'MATHEMATICA',sub:'数理研究会',cls:''},
+      bottom:{bg:'#1a5fa3',color:'#fff',left:'HVC-MA',right:'©1992 PI'},
+      code:'HVC-MA', tag:'', glow:'#4ac9e8' },
+    events:[
+      
+      {title:'MATH RIDE',sub:'学生数学五輪',date:'11.22 (土) 10:00',venue:'講義棟 C-101',tagline:'解けた瞬間、世界が広くなる。',body:'3時間・7問、個人戦。初級／中級／上級の3コース。上位者に数学書籍を贈呈。',posterImage:null,posterBg:'linear-gradient(135deg, #0a3a6a 0%, #1a5fa3 100%)',accent:'#fff',symbol:'π',symbolCls:'',titleEn:true},
+      {title:'赤城山 合宿',sub:'夏の数学合宿',date:'08.23 (土) - 25 (月)',venue:'赤城山青少年交流の家',tagline:'星の下で、数式を解く。',body:'2泊3日の合宿。日中は問題演習、夜は天体観測。現地集合・解散、宿泊費込8,500円。',posterImage:null,posterBg:'linear-gradient(180deg, #0a0a3a 0%, #1a5fa3 60%, #4ac9e8 100%)',accent:'#4ac9e8',symbol:'✦',symbolCls:'',titleEn:true},
+      {title:'新歓パズルナイト',sub:'PUZZLE CAFÉ',date:'04.23 (水) 18:00',venue:'サークル棟 談話室',tagline:'紙とペンと、コーヒー一杯。',body:'パズル＆ボードゲーム会。難易度別コーナー、景品あり。コーヒー・お菓子無料。',posterImage:null,posterBg:'linear-gradient(135deg, #4a3828 0%, #1a5fa3 100%)',accent:'#ffdc64',symbol:'◆',symbolCls:'',titleEn:true}
+    
+    ]},
+
+  // --- ART / CULTURE ---
+  { id:9, comingSoon:true, cat:'art', slug:'cinema', name:'映画研究部', short:'CINEMA',
+    description:'上映会と自主制作の二本立て。年1本の短編映画を制作。', accent:'#ed1c24',
+    cart:{ image:null, body:'#0a0a0a', bodyDark:'#000',
+      strip:{bg:'#ed1c24',color:'#fff',label:'FAMIKON シネマ SERIES'},
+      art:{bg:'#000',color:'#ed1c24',symbol:'◉',cls:'',deco:'scan'},
+      title:{bg:'#ed1c24',color:'#000',main:'CINEMA',sub:'FILM SOCIETY',cls:''},
+      bottom:{bg:'#000',color:'#ed1c24',left:'HVC-CM',right:'©1986 CINE'},
+      code:'HVC-CM', tag:'', glow:'#ed1c24' },
+    events:[
+      
+      {title:'MIDNIGHT CINEMA',sub:'オールナイト上映会',date:'10.31 (金) 22:00',venue:'シネマテークたかさき',tagline:'午前零時、上映開始。',body:'ハロウィン・カルトホラー3本立てオールナイト。コスプレ入場歓迎、ポップコーン付。',posterImage:null,posterBg:'linear-gradient(135deg, #1a0000 0%, #ed1c24 100%)',accent:'#ed1c24',symbol:'◉',symbolCls:'',titleEn:true},
+      {title:'自主映画上映会',sub:'STUDENT SHORTS',date:'07.05 (土) 14:00',venue:'前橋プラザ元気21 映像ホール',tagline:'作った本人が、隣で観ている。',body:'部員制作短編5本上映＋監督Q&A。観覧無料、整理券配布（当日）。',posterImage:null,posterBg:'linear-gradient(180deg, #2a1810 0%, #8b5a2b 100%)',accent:'#ffb800',symbol:'▷',symbolCls:'en',titleEn:true},
+      {title:'監督トーク',sub:'DIRECTOR TALK',date:'05.24 (土) 15:00',venue:'大学 視聴覚ホール',tagline:'作り手の、頭の中を覗く。',body:'地元出身監督を招いたトークイベント。質疑応答、サイン会あり。',posterImage:null,posterBg:'linear-gradient(135deg, #0a0a0a 0%, #3a2818 100%)',accent:'#c9a961',symbol:'▸',symbolCls:'',titleEn:true}
+    
+    ]},
+  { id:10, comingSoon:true, cat:'art', slug:'art', name:'美術研究会', short:'ART CLUB',
+    description:'ZINE・絵画・立体作品の制作と展示。年2回の合同展。', accent:'#ed8fa3',
+    cart:{ image:null, body:'#f8b8c8', bodyDark:'#c98da0',
+      strip:{bg:'#2a1810',color:'#ffdc64',label:'FAMIKON ジン SERIES'},
+      art:{bg:'linear-gradient(135deg, #fff 0%, #ffdc64 50%, #ed8fa3 100%)',color:'#2a1810',symbol:'✂',cls:'',deco:'dots'},
+      title:{bg:'#2a1810',color:'#ffdc64',main:'ART CLUB',sub:'美術研究会',cls:''},
+      bottom:{bg:'#ffdc64',color:'#2a1810',left:'HVC-AR',right:'©1993 BILE'},
+      code:'HVC-AR', tag:'', glow:'#ed8fa3' },
+    events:[
+      
+      {title:'ZINE FAIR 前橋',sub:'自主出版フェア',date:'11.16 (日) 11:00 - 17:00',venue:'アーツ前橋 エントランス',tagline:'手で作ったものが、手で売られている。',body:'同人誌・アートブック即売会。30サークル参加、ワークショップコーナー併設。',posterImage:null,posterBg:'linear-gradient(135deg, #f5e8d5 0%, #ed8fa3 100%)',accent:'#ed8fa3',symbol:'✎',symbolCls:'',titleEn:true},
+      {title:'秋桜祭 ギャラリー',sub:'学園祭作品展',date:'11.01 (土) - 02 (日)',venue:'1号館 2F ギャラリー',tagline:'今年度の、全部を並べる。',body:'油絵・版画・立体・デジタル作品の総合展示。在廊日には作家解説あり。',posterImage:null,posterBg:'linear-gradient(135deg, #fae6a4 0%, #f4a574 100%)',accent:'#f4a574',symbol:'△',symbolCls:'',titleEn:true},
+      {title:'赤城 写生合宿',sub:'新歓スケッチ会',date:'04.26 (土) 08:00',venue:'赤城南面千本桜',tagline:'春の景色を、紙に留める。',body:'赤城の桜名所で日帰り写生。画材貸出あり、バス往復500円。',posterImage:null,posterBg:'linear-gradient(135deg, #c9e6a8 0%, #ed8fa3 100%)',accent:'#b8c98e',symbol:'✿',symbolCls:'',titleEn:true}
+    
+    ]},
+  { id:11, comingSoon:true, cat:'art', slug:'drama', name:'演劇部', short:'DRAMA',
+    description:'年3本の公演と、学外公演参加を軸に活動。', accent:'#c9a961',
+    cart:{ image:null, body:'#4a0e1a', bodyDark:'#2a080f',
+      strip:{bg:'#c9a961',color:'#2a080f',label:'FAMIKON ステージ SERIES'},
+      art:{bg:'linear-gradient(180deg, #0a0828 0%, #1a1a4a 100%)',color:'#c9a961',symbol:'✦',cls:'',deco:'stars'},
+      title:{bg:'#c9a961',color:'#2a080f',main:'DRAMA',sub:'THEATRE CO.',cls:''},
+      bottom:{bg:'#2a080f',color:'#c9a961',left:'HVC-DR',right:'©1985 STAGE'},
+      code:'HVC-DR', tag:'', glow:'#c9a961' },
+    events:[
+      
+      {title:'MIDSUMMER NIGHT',sub:'夏季本公演',date:'07.26 (土) - 27 (日)',venue:'ベイシア文化ホール 小ホール',tagline:'夢のような、一夜を。',body:'シェイクスピア「真夏の夜の夢」。特設舞台・照明・衣装全て部員製作。',posterImage:null,posterBg:'linear-gradient(180deg, #0a0828 0%, #2a1850 60%, #c9a961 100%)',accent:'#c9a961',symbol:'月',symbolCls:'kanji',titleEn:true},
+      {title:'冬季本公演',sub:'WINTER PLAY',date:'12.06 (土) - 07 (日)',venue:'前橋市民文化会館 小ホール',tagline:'幕が上がる、その瞬間のために。',body:'オリジナル脚本による現代劇。来場者投票で翌年度演目が決まる。',posterImage:null,posterBg:'linear-gradient(180deg, #4a0818 0%, #c9a961 100%)',accent:'#c9a961',symbol:'幕',symbolCls:'kanji',titleEn:false},
+      {title:'新歓読み合わせ',sub:'ROOKIE READ',date:'04.17 (木) 18:30',venue:'部室（4号館B1）',tagline:'初めての、台詞の1行。',body:'新入部員向け読み合わせ会。即興コーナーあり。台本コピー配布。',posterImage:null,posterBg:'linear-gradient(135deg, #4a0828 0%, #8b2840 100%)',accent:'#ed8fa3',symbol:'♦',symbolCls:'en',titleEn:true}
+    
+    ]},
+  { id:12, featured:true, cat:'art', slug:'photo', name:'写真部', short:'SHUTTER',
+    description:'フィルム・デジタル両刀、暗室完備の老舗写真部。', accent:'#fff',
+    cart:{ image:'images/photo-cart.jpg',nameOverlay:{text:'SHUTTER',font:"'DM Serif Display','Playfair Display',serif",color:'#fff',size:'42px',spacing:'5px',weight:'400',shadow:'rgba(180,0,0,0.7)',sub:'PHOTOGRAPHY SOCIETY · SINCE 1978'}, body:'#2a2a2a', bodyDark:'#0a0a0a',
+      strip:{bg:'#fff',color:'#000',label:'FAMIKON ピクト SERIES'},
+      art:{bg:'linear-gradient(90deg, #000 0%, #fff 50%, #000 100%)',color:'#000',symbol:'◎',cls:'',deco:''},
+      title:{bg:'#000',color:'#fff',main:'SHUTTER',sub:'写真部',cls:''},
+      bottom:{bg:'#fff',color:'#000',left:'HVC-SH',right:'©1989 SHUT'},
+      code:'HVC-SH', tag:'', glow:'#fff' },
+    events:[
+      
+      {title:'EXPOSURE',sub:'写真展',date:'11.08 (土) - 15 (土)',venue:'前橋文学館 特別展示室',tagline:'見えないものを、見せる。',body:'部員20名による年次写真展。デジタル・フィルム混合展示。売上は部費へ。',posterImage:'images/photo-1.jpg',posterBg:'linear-gradient(135deg, #1a1a1a 0%, #fff 100%)',accent:'#fff',symbol:'◎',symbolCls:'',titleEn:true},
+      {title:'富岡 撮影ツアー',sub:'世界遺産撮影会',date:'09.13 (土) 09:00',venue:'富岡製糸場',tagline:'150年の光を、切り取る。',body:'富岡製糸場特別撮影会。朝の開館前に限定入場、フィルム貸出可。参加費2,000円。',posterImage:'images/photo-2.jpg',posterBg:'linear-gradient(135deg, #8b7540 0%, #c9a961 100%)',accent:'#c9a961',symbol:'□',symbolCls:'',titleEn:true},
+      {title:'暗室解放日',sub:'DARKROOM DAY',date:'毎月第4土曜 13:00',venue:'暗室（本館B1）',tagline:'シャッターを切った、その先の世界へ。',body:'モノクロフィルム現像・プリント指導。薬品は部で用意、フィルム持参。',posterImage:'images/photo-3.jpg',posterBg:'linear-gradient(135deg, #000 0%, #3a0a0a 100%)',accent:'#ed1c24',symbol:'⚫',symbolCls:'',titleEn:true}
+    
+    ]},
+  { id:13, comingSoon:true, cat:'art', slug:'bungei', name:'文芸部', short:'LITERATURE',
+    description:'小説・詩・エッセイの執筆と部誌刊行、年3回の朗読会。', accent:'#d8c090',
+    cart:{ image:null, body:'#8b5a2b', bodyDark:'#5a3818',
+      strip:{bg:'#f4e8c0',color:'#2a1810',label:'FAMIKON 文藝 SERIES'},
+      art:{bg:'linear-gradient(180deg, #f4e8c0 0%, #d8c090 100%)',color:'#2a1810',symbol:'文',cls:'kanji',deco:''},
+      title:{bg:'#2a1810',color:'#f4e8c0',main:'文芸部',sub:'LITERATURE',cls:'jp'},
+      bottom:{bg:'#f4e8c0',color:'#2a1810',left:'HVC-BN',right:'©1988 BUNGEI'},
+      code:'HVC-BN', tag:'', glow:'#d8c090' },
+    events:[
+      
+      {title:'文藝春秋 第38号',sub:'同人誌発行',date:'11.02 (日) 11:00',venue:'秋桜祭 1号館入口',tagline:'書くことは、生きること。',body:'年次同人誌の発行・頒布。小説、詩、エッセイ計24編収録。価格500円。',posterImage:null,posterBg:'linear-gradient(180deg, #2a1808 0%, #8b5a2b 100%)',accent:'#c9a961',symbol:'冊',symbolCls:'kanji',titleEn:false},
+      {title:'朗読会',sub:'READING NIGHT',date:'06.14 (土) 19:00',venue:'高崎 BOOK CAFÉ 燈',tagline:'声に出して、はじめて出会う。',body:'部員＋ゲストによる朗読会。自作・古典混在、各人10分。入場自由、1ドリンク500円。',posterImage:null,posterBg:'linear-gradient(135deg, #1a0a18 0%, #4a2840 100%)',accent:'#ed8fa3',symbol:'℘',symbolCls:'',titleEn:true},
+      {title:'執筆合宿',sub:'WRITING CAMP',date:'03.15 (土) - 17 (月)',venue:'伊香保温泉 旅館緑水亭',tagline:'温泉と、原稿用紙。',body:'2泊3日の執筆合宿。締切厳守、最終日に講評会。宿泊費込12,000円。',posterImage:null,posterBg:'linear-gradient(180deg, #1a1a4a 0%, #8b5a2b 100%)',accent:'#ffdc64',symbol:'☆',symbolCls:'',titleEn:true}
+    
+    ]},
+
+  // --- SPORTS / OUTDOOR ---
+  { id:14, comingSoon:true, cat:'sport', slug:'love', name:'テニスサークル LOVEGAME', short:'LOVEGAME',
+    description:'ゆる〜く、楽しく、テニス。初心者歓迎のマイペース団体。', accent:'#ff8f3c',
+    cart:{ image:null, body:'#ed6a2a', bodyDark:'#b84a14',
+      strip:{bg:'#ffdc64',color:'#8b2818',label:'FAMIKON サンセット SERIES'},
+      art:{bg:'linear-gradient(180deg, #ffdc64 0%, #ed6a2a 50%, #8b2818 100%)',color:'#fff',symbol:'☀',cls:'small',deco:'flame'},
+      title:{bg:'#8b2818',color:'#ffdc64',main:'LOVEGAME',sub:'TENNIS CLUB',cls:''},
+      bottom:{bg:'#ffdc64',color:'#8b2818',left:'HVC-LG',right:'©1990 LOVE'},
+      code:'HVC-LG', tag:'LAST', glow:'#ff8f3c' },
+    events:[
+      
+      {title:'新歓BBQ',sub:'WELCOME BBQ',date:'04.26 (土) 12:00',venue:'敷島公園 バーベキュー広場',tagline:'初戦の前に、肉を焼け。',body:'新入生歓迎の河川敷BBQ。食材費2,000円、ラケット貸出あり。雨天時は翌週順延。',posterImage:null,posterBg:'linear-gradient(180deg, #8b0028 0%, #ed6a2a 60%, #ffdc64 100%)',accent:'#ed6a2a',symbol:'♥',symbolCls:'',titleEn:true},
+      {title:'関東学生選手権',sub:'SUMMER CUP',date:'08.09 (土) - 10 (日)',venue:'敷島公園庭球場',tagline:'夏の、最後の一球まで。',body:'関東学生テニス選手権団体戦。応援歓迎、タオルエール制作中。',posterImage:null,posterBg:'linear-gradient(135deg, #2ec250 0%, #ffb800 100%)',accent:'#ffb800',symbol:'★',symbolCls:'en',titleEn:true},
+      {title:'合同合宿',sub:'JOINT CAMP',date:'09.06 (土) - 08 (月)',venue:'万座温泉 高原ホテル',tagline:'標高1,800mで、打ち込む。',body:'他大学3校との合同合宿。高地トレーニング、温泉付き。宿泊費込18,000円。',posterImage:null,posterBg:'linear-gradient(180deg, #4a5a80 0%, #2ec250 100%)',accent:'#4ac9e8',symbol:'☀',symbolCls:'en',titleEn:true}
+    
+    ]},
+  { id:15, featured:true, cat:'sport', slug:'peak', name:'登山部', short:'ALPINE',
+    description:'国内の名峰を年4回登る体育会系アウトドア団体。', accent:'#8abf8a',
+    cart:{ image:'images/peak-cart.jpg',nameOverlay:{text:'ALPINE',font:"'Bebas Neue','Oswald',sans-serif",color:'#ffd5a8',size:'44px',spacing:'6px',weight:'400',shadow:'rgba(90,20,40,0.7)',sub:'MOUNTAINEERING CLUB · EST.1960'}, body:'#2a5a2a', bodyDark:'#163a16',
+      strip:{bg:'#8b5a2b',color:'#f4e8c0',label:'FAMIKON アルパイン SERIES'},
+      art:{bg:'linear-gradient(180deg, #4a6a8a 0%, #2a3a4a 60%, #163a16 100%)',color:'#f4e8c0',symbol:'⛰',cls:'small',deco:''},
+      title:{bg:'#f4e8c0',color:'#163a16',main:'ALPINE',sub:'登山部',cls:''},
+      bottom:{bg:'#163a16',color:'#f4e8c0',left:'HVC-AL',right:'©1986 ALPS'},
+      code:'HVC-AL', tag:'', glow:'#8abf8a' },
+    events:[
+      
+      {title:'谷川岳 夏合宿',sub:'SUMMER CLIMB',date:'08.16 (土) - 18 (月)',venue:'谷川岳 西黒尾根',tagline:'雲の上から、夏を見下ろす。',body:'1泊2日のテント泊山行。初心者同行可、装備貸出あり。参加費込7,500円。',posterImage:'images/peak-1.jpg',posterBg:'linear-gradient(180deg, #1a1a4a 0%, #4a5070 50%, #ffb800 100%)',accent:'#ffb800',symbol:'▲',symbolCls:'en',titleEn:true},
+      {title:'谷川岳 雪上訓練',sub:'WINTER TRAINING',date:'02.21 (土) - 22 (日)',venue:'谷川岳 天神平',tagline:'氷の世界で、脚を鍛える。',body:'ピッケル・アイゼン使用の雪上訓練。経験者同行必須、装備一部貸出。',posterImage:'images/peak-2.jpg',posterBg:'linear-gradient(180deg, #0a1a4a 0%, #8ec4e8 100%)',accent:'#8ec4e8',symbol:'❄',symbolCls:'en',titleEn:true},
+      {title:'赤城ハイク',sub:'新歓ハイキング',date:'05.10 (土) 08:00',venue:'赤城山 覚満淵',tagline:'軽く、はじめの一歩。',body:'初心者向け日帰りハイク。赤城山北面の湿原コース、所要3時間。弁当支給。',posterImage:'images/peak-3.jpg',posterBg:'linear-gradient(180deg, #2ec250 0%, #ffdc64 100%)',accent:'#2ec250',symbol:'▲',symbolCls:'',titleEn:true}
+    
+    ]},
+  { id:16, comingSoon:true, cat:'sport', slug:'wave', name:'サーフィン同好会', short:'WAVE',
+    description:'湘南・千葉・沖縄、波のある場所を追う団体。', accent:'#4ac9e8',
+    cart:{ image:null, body:'#4ac9e8', bodyDark:'#1a7aa8',
+      strip:{bg:'#fff',color:'#1a7aa8',label:'FAMIKON オーシャン SERIES'},
+      art:{bg:'linear-gradient(180deg, #ffdc64 0%, #4ac9e8 40%, #1a5fa3 100%)',color:'#fff',symbol:'~',cls:'en',deco:'stripe'},
+      title:{bg:'#1a5fa3',color:'#ffdc64',main:'WAVE',sub:'SURF CLUB',cls:''},
+      bottom:{bg:'#ffdc64',color:'#1a5fa3',left:'HVC-WV',right:'©1991 OCEAN'},
+      code:'HVC-WV', tag:'HOT', glow:'#4ac9e8' },
+    events:[
+      
+      {title:'WAVE JAM 千葉遠征',sub:'夏の遠征',date:'07.12 (土) - 13 (日)',venue:'千葉 一宮海岸',tagline:'波と、太陽と、金曜夜のバス。',body:'夏の遠征。金夜発バス＋2日間サーフ＋BBQ。板レンタル可。参加費込12,000円。',posterImage:null,posterBg:'linear-gradient(180deg, #fed8b8 0%, #4ac9e8 60%, #1a5fa3 100%)',accent:'#ffb800',symbol:'~',symbolCls:'en',titleEn:true},
+      {title:'新歓 ビーチパーティ',sub:'SUNSET BEACH',date:'06.07 (土) 16:00',venue:'大洗海岸',tagline:'日が沈むまで、遊び尽くせ。',body:'大洗サンビーチでの新歓パーティ。海遊び＋BBQ。参加費3,000円、送迎バスあり。',posterImage:null,posterBg:'linear-gradient(180deg, #ff8f3c 0%, #4ac9e8 100%)',accent:'#ed6a2a',symbol:'☀',symbolCls:'en',titleEn:true},
+      {title:'秋の遠征',sub:'AUTUMN TRIP',date:'10.18 (土) - 20 (月)',venue:'千葉 鴨川',tagline:'夏の残り火を、追いかける。',body:'3日間の遠征。台風シーズンの大波を狙う。宿泊費込15,000円、経験者優先。',posterImage:null,posterBg:'linear-gradient(180deg, #1a0a3a 0%, #b24bf3 100%)',accent:'#b24bf3',symbol:'☾',symbolCls:'en',titleEn:true}
+    
+    ]},
+
+  // --- FESTIVAL / COMMUNITY ---
+  { id:17, comingSoon:true, cat:'festival', slug:'festa', name:'大学祭実行委員会', short:'FESTIVAL',
+    description:'年一度の大学祭「秋桜祭」を運営する最大規模の組織。', accent:'#ffb800',
+    cart:{ image:null, body:'#cc0018', bodyDark:'#8b0010',
+      strip:{bg:'#000',color:'#ffdc64',label:'FAMIKON 祭 SERIES'},
+      art:{bg:'linear-gradient(180deg, #1a0404 0%, #8b1818 100%)',color:'#ffdc64',symbol:'祭',cls:'kanji',deco:'rays'},
+      title:{bg:'#000',color:'#ffdc64',main:'FESTIVAL',sub:'秋桜祭 実行委員会',cls:''},
+      bottom:{bg:'#ffdc64',color:'#000',left:'HVC-FT',right:'©1975 COSMOS'},
+      code:'HVC-FT', tag:'HOT', glow:'#ffb800' },
+    events:[
+      
+      {title:'秋桜祭 本祭',sub:'AUTUMN FESTIVAL',date:'11.01 (土) - 02 (日)',venue:'大学全キャンパス',tagline:'二日間、キャンパスが街になる。',body:'120サークル・学術展示・フードブース・野外ステージ。花火打上18:30（2日目）。',posterImage:null,posterBg:'linear-gradient(180deg, #4a0808 0%, #ed6a2a 60%, #ffdc64 100%)',accent:'#ffdc64',symbol:'祭',symbolCls:'kanji',titleEn:false},
+      {title:'翔嶺祭 春',sub:'SPRING FES',date:'05.24 (土) - 25 (日)',venue:'大学メインストリート',tagline:'新学期の、最初の笑い声。',body:'春の大学祭。新入生企画が中心、ステージ・出店・運動イベント。',posterImage:null,posterBg:'linear-gradient(180deg, #ed8fa3 0%, #ffdc64 100%)',accent:'#ed8fa3',symbol:'✿',symbolCls:'',titleEn:false},
+      {title:'後夜祭',sub:'AFTER PARTY',date:'11.02 (日) 20:30',venue:'メイングラウンド',tagline:'最後に、火を焚く。',body:'キャンプファイヤー＋バンド演奏＋花火。在学生限定、参加証必要。',posterImage:null,posterBg:'linear-gradient(180deg, #1a0818 0%, #ff4a2a 100%)',accent:'#ff4a2a',symbol:'☆',symbolCls:'',titleEn:true}
+    
+    ]},
+  { id:18, comingSoon:true, cat:'festival', slug:'volunteer', name:'ボランティアサークル', short:'VOLUNTEER',
+    description:'清掃・支援活動を中心に、穏やかに活動するサークル。', accent:'#8ec4e8',
+    cart:{ image:null, body:'#8ec4e8', bodyDark:'#4a8bbc',
+      strip:{bg:'#fff',color:'#4a8bbc',label:'FAMIKON ピース SERIES'},
+      art:{bg:'linear-gradient(180deg, #b8dff0 0%, #4a8bbc 100%)',color:'#fff',symbol:'♥',cls:'small',deco:'dots'},
+      title:{bg:'#fff',color:'#4a8bbc',main:'VOLUNTEER',sub:'ボランティア',cls:''},
+      bottom:{bg:'#4a8bbc',color:'#fff',left:'HVC-VL',right:'©1994 PEACE'},
+      code:'HVC-VL', tag:'', glow:'#8ec4e8' },
+    events:[
+      
+      {title:'前橋公園 CLEAN DAY',sub:'清掃ボランティア',date:'05.17 (土) 09:00',venue:'前橋公園 さちの池周辺',tagline:'拾った数だけ、街がきれいになる。',body:'前橋市環境部共催の清掃活動。軍手・ゴミ袋支給、終了後お弁当あり。',posterImage:null,posterBg:'linear-gradient(180deg, #2ec250 0%, #4ac9e8 100%)',accent:'#4ac9e8',symbol:'✧',symbolCls:'en',titleEn:true},
+      {title:'子ども食堂 運営',sub:'月次支援',date:'毎月第3土曜 15:00',venue:'前橋 こども食堂「ひなた」',tagline:'一食分の、温かさ。',body:'地域こども食堂の調理・配膳・片付け支援。参加証明書発行可（就活用）。',posterImage:null,posterBg:'linear-gradient(180deg, #4a2810 0%, #ffdc64 100%)',accent:'#ed6a2a',symbol:'♥',symbolCls:'en',titleEn:true},
+      {title:'被災地ツアー',sub:'復興支援ボランティア',date:'09.13 (土) - 14 (日)',venue:'福島県 富岡町',tagline:'現地で、体で覚える。',body:'1泊2日の復興支援活動。参加費実費のみ（バス＋宿）、事前研修あり。',posterImage:null,posterBg:'linear-gradient(180deg, #8ec4e8 0%, #fff 100%)',accent:'#8ec4e8',symbol:'☀',symbolCls:'en',titleEn:true}
+    
+    ]},
+  { id:19, comingSoon:true, cat:'festival', slug:'world', name:'国際交流会', short:'WORLD',
+    description:'留学生と日本人学生の交流ハブ。週1の交流カフェ運営。', accent:'#ff8f14',
+    cart:{ image:null, body:'#1a9e8f', bodyDark:'#0a6859',
+      strip:{bg:'#ff8f14',color:'#fff',label:'FAMIKON ワールド SERIES'},
+      art:{bg:'linear-gradient(135deg, #1a4a8f 0%, #ff8f14 100%)',color:'#fff',symbol:'◉',cls:'',deco:'dots'},
+      title:{bg:'#ff8f14',color:'#0a1a4a',main:'WORLD',sub:'国際交流会',cls:''},
+      bottom:{bg:'#0a1a4a',color:'#ffdc64',left:'HVC-WD',right:'©1996 GLOBE'},
+      code:'HVC-WD', tag:'NEW', glow:'#ff8f14' },
+    events:[
+      
+      {title:'WORLD CAFÉ',sub:'多国籍交流カフェ',date:'毎月第2金曜 18:00',venue:'国際交流ラウンジ (2号館4F)',tagline:'一杯のコーヒーから、世界が広がる。',body:'月例の多国籍交流会。各国のお茶菓子持ち寄り、英語＋母語で会話。出入り自由。',posterImage:null,posterBg:'linear-gradient(135deg, #0a1a4a 0%, #1a4a8f 60%, #ffb800 100%)',accent:'#ffb800',symbol:'☕',symbolCls:'en',titleEn:true},
+      {title:'INTERNATIONAL WEEK',sub:'国際週間',date:'10.13 (月) - 17 (金)',venue:'メインストリート',tagline:'食べて、踊って、出会う週。',body:'各国留学生主催の屋台・音楽・ダンスパフォーマンス。協定校20校の文化紹介。',posterImage:null,posterBg:'linear-gradient(135deg, #c0392b 0%, #ffdc64 50%, #2ec250 100%)',accent:'#ed6a2a',symbol:'✈',symbolCls:'en',titleEn:true},
+      {title:'留学生歓迎会',sub:'WELCOME PARTY',date:'04.19 (土) 18:00',venue:'大学カフェテリア',tagline:'はじめまして、の10か国。',body:'新規留学生約30名を歓迎。日本食試食、バディ紹介、校内ガイドツアー。',posterImage:null,posterBg:'linear-gradient(135deg, #1a5fa3 0%, #ffdc64 100%)',accent:'#ffdc64',symbol:'♨',symbolCls:'en',titleEn:true}
+    
+    ]},
+  { id:20, comingSoon:true, cat:'festival', slug:'cuisine', name:'料理研究会', short:'CUISINE',
+    description:'月例料理会・対決イベント・レシピ発行で活動する団体。', accent:'#ff8f3c',
+    cart:{ image:null, body:'#ff4a0a', bodyDark:'#b8340a',
+      strip:{bg:'#ffdc64',color:'#8b1818',label:'FAMIKON キッチン SERIES'},
+      art:{bg:'linear-gradient(180deg, #8b1818 0%, #ff4a0a 50%, #ffdc64 100%)',color:'#fff',symbol:'🔥',cls:'small',deco:'flame'},
+      title:{bg:'#ffdc64',color:'#8b1818',main:'CUISINE',sub:'料理研究会',cls:''},
+      bottom:{bg:'#8b1818',color:'#ffdc64',left:'HVC-CU',right:'©1993 TASTE'},
+      code:'HVC-CU', tag:'NEW', glow:'#ff8f3c' },
+    events:[
+      
+      {title:'KITCHEN BATTLE',sub:'学生料理選手権',date:'10.25 (土) 13:00',venue:'調理実習室 + キャンパス中庭',tagline:'鍋が、火を噴く日。',body:'3人1組・3ラウンドの料理対決。テーマ食材「群馬のこんにゃく」。審査員は地元シェフ。',posterImage:null,posterBg:'linear-gradient(135deg, #8b0018 0%, #ff4a2a 60%, #ffdc64 100%)',accent:'#ed6a2a',symbol:'🔥',symbolCls:'',titleEn:true},
+      {title:'焼まんじゅう 研究会',sub:'郷土料理実習',date:'06.14 (土) 14:00',venue:'調理実習室',tagline:'群馬の味噌を、甘辛く。',body:'群馬名物・焼きまんじゅうの実習会。地元店主を講師に招聘。試食＋お土産付。',posterImage:null,posterBg:'linear-gradient(135deg, #4a2810 0%, #c9a961 100%)',accent:'#c9a961',symbol:'●',symbolCls:'',titleEn:false},
+      {title:'新歓 すき焼きパーティ',sub:'WELCOME SUKIYAKI',date:'04.25 (金) 18:30',venue:'部室＋隣室',tagline:'まずは、上州牛で歓迎する。',body:'上州牛を囲む新歓すき焼き会。食費3,000円、飲み物持ち寄り歓迎。',posterImage:null,posterBg:'linear-gradient(135deg, #c0392b 0%, #8b0018 100%)',accent:'#8b0018',symbol:'✦',symbolCls:'',titleEn:true}
+    
+    ]}
+];
+
+// =====================================================
+// RENDERING: SHOP
+// =====================================================
+const categoryNames = { all:'ALL', music:'♪ 音楽', tech:'⚙ 技術・学術', art:'✎ アート・文化', sport:'⛰ スポーツ・野外', festival:'★ 祭・交流' };
+let activeCat = 'all';
+
+function renderCats() {
+  const cats = ['all','music','tech','art','sport','festival'];
+  document.getElementById('cats').innerHTML = cats.map(c =>
+    `<div class="cat-chip ${c===activeCat?'active':''}" onclick="selectCat('${c}')">${categoryNames[c]}</div>`
+  ).join('');
+}
+function selectCat(c) { activeCat = c; renderCats(); renderShelf(); }
+
+function cartHTML(org) {
+  const decoMap = { rays:'<div class="art-rays"></div>', dots:'<div class="art-dots"></div>', scan:'<div class="art-scan"></div>', stars:'<div class="art-stars"></div>', grid:'<div class="art-grid"></div>', stripe:'<div class="art-stripe"></div>', flame:'<div class="art-flame"></div>' };
+  const deco = decoMap[org.cart.art.deco] || '';
+  const tag = org.cart.tag ? `<div class="cart-tag ${org.cart.tag.toLowerCase()}">${org.cart.tag}</div>` : '';
+  const orgShort = org.name.length > 14 ? org.name.slice(0,13) + '…' : org.name;
+  const c = org.cart;
+  const isComingSoon = org.comingSoon === true;
+  const artInner = c.image
+    ? `<img class="art-photo" src="${c.image}" alt="${org.short}" loading="lazy">`
+    : `${deco}<div class="art-symbol ${c.art.cls}">${c.art.symbol}</div>`;
+  const artClass = c.image ? 'label-art has-photo' : 'label-art';
+  // Club name overlay on top of cartridge image (only when image is present)
+  let overlay = '';
+  if (c.image && c.nameOverlay) {
+    const o = c.nameOverlay;
+    const overlayStyle = [
+      `--cno-font: ${o.font}`,
+      `--cno-color: ${o.color || '#fff'}`,
+      `--cno-size: ${o.size || '26px'}`,
+      `--cno-spacing: ${o.spacing || '2px'}`,
+      `--cno-weight: ${o.weight || 700}`,
+      `--cno-style: ${o.style || 'normal'}`,
+      o.shadow ? `--cno-shadow: ${o.shadow}` : ''
+    ].filter(Boolean).join('; ');
+    const subText = o.sub ? `<span class="cno-sub">${o.sub}</span>` : '';
+    overlay = `<div class="cart-name-overlay" style="${overlayStyle}">${o.text || org.short}${subText}</div>`;
+  }
+  // Clean up strip label: remove "FAMIKON" prefix if present (replaced by SFC badge)
+  const stripLabel = (c.strip.label || '').replace(/^FAMIKON\s*/, '').replace(/\s*SERIES$/, '') || org.short;
+  const brandClass = isDarkColor(c.title.bg) ? 'light' : 'dark';
+  const code = c.code ? c.code.replace(/^HVC-/, 'SHVC-') : 'SHVC-' + org.id.toString().padStart(3,'0') + '-JPN';
+  const soonOverlay = isComingSoon ? `<div class="coming-soon-stamp">COMING<br>SOON</div>` : '';
+  const clickAttr = isComingSoon ? `onclick="showComingSoonToast('${org.name}')"` : `onclick="pickOrg(${org.id})"`;
+  return `<div class="cart ${isComingSoon?'is-coming-soon':''}" data-id="${org.id}" style="
+    --strip-bg: ${c.strip.bg}; --strip-color: ${c.strip.color};
+    --art-bg: ${c.art.bg}; --art-color: ${c.art.color};
+    --title-bg: ${c.title.bg}; --title-color: ${c.title.color};
+    --glow: ${c.glow};" ${clickAttr}>
+    <div class="cart-glow"></div>${tag}${soonOverlay}
+    <div class="cart-shell">
+      <div class="sfc-top">
+        <div class="sfc-vents"></div>
+        <div class="sfc-logo">SUPER FAMICOM</div>
+        <div class="sfc-vents"></div>
+      </div>
+      <div class="cart-label">
+        <div class="label-top">${stripLabel} · VOL.${org.id.toString().padStart(2,'0')}</div>
+        <div class="${artClass}">${artInner}${overlay}</div>
+        <div class="label-title">
+          <div class="title-text">
+            <div class="title-main ${c.title.cls}">${c.title.main}</div>
+            <div class="title-sub">${c.title.sub}</div>
+          </div>
+          <div class="sfc-badge ${brandClass}">
+            <span class="sfc-1">NINTENDO</span>
+            <span class="sfc-2">SFC</span>
+          </div>
+        </div>
+      </div>
+      <div class="plastic-info"><span>${code}</span><span>${c.bottom.right || '©1995 CAMPUS'}</span></div>
+    </div>
+    <div class="cart-tooltip">▶ ${org.short}</div>
+  </div>`;
+}
+
+// Helper: detect if color is dark for contrast
+function isDarkColor(hex) {
+  if (!hex || typeof hex !== 'string') return true;
+  const m = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})/i);
+  if (!m) return true;
+  const [r, g, b] = [parseInt(m[1],16), parseInt(m[2],16), parseInt(m[3],16)];
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance < 0.55;
+}
+
+function renderShelf() {
+  const rawList = activeCat === 'all' ? orgs : orgs.filter(o => o.cat === activeCat);
+  // Sort priority: featured (new images) first, active second, coming-soon last
+  const list = [...rawList].sort((a, b) => {
+    const rankA = a.featured ? 0 : a.comingSoon ? 2 : 1;
+    const rankB = b.featured ? 0 : b.comingSoon ? 2 : 1;
+    if (rankA !== rankB) return rankA - rankB;
+    return a.id - b.id;
+  });
+  const track = document.getElementById('shelf-track');
+  if (track) {
+    track.innerHTML = list.map(cartHTML).join('');
+    // Initialize focus on first cart
+    requestAnimationFrame(() => {
+      updateCartFocus();
+      const first = track.querySelector('.cart');
+      if (first) first.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'auto' });
+    });
+  }
+  document.getElementById('cart-count').textContent = `${String(list.length).padStart(2,'0')} CLUBS`;
+}
+
+// Determine which cart is closest to the viewport center of the track, update classes
+function updateCartFocus() {
+  const track = document.getElementById('shelf-track');
+  if (!track) return;
+  const trackRect = track.getBoundingClientRect();
+  const centerX = trackRect.left + trackRect.width / 2;
+  const carts = [...track.querySelectorAll('.cart')];
+  let focusEl = null, minDist = Infinity, focusIdx = -1;
+  carts.forEach((c, i) => {
+    const r = c.getBoundingClientRect();
+    const d = Math.abs((r.left + r.width/2) - centerX);
+    if (d < minDist) { minDist = d; focusEl = c; focusIdx = i; }
+  });
+  carts.forEach((c, i) => {
+    c.classList.remove('is-focus', 'is-prev', 'is-next');
+    if (i === focusIdx) c.classList.add('is-focus');
+    else if (i === focusIdx - 1) c.classList.add('is-prev');
+    else if (i === focusIdx + 1) c.classList.add('is-next');
+  });
+  // Update focus info panel
+  const id = focusEl ? parseInt(focusEl.dataset.id, 10) : null;
+  const org = orgs.find(o => o.id === id);
+  if (org) updateFocusInfo(org);
+}
+
+function updateFocusInfo(org) {
+  const panel = document.getElementById('focus-info');
+  if (!panel) return;
+  const isComingSoon = org.comingSoon === true;
+  if (isComingSoon) {
+    panel.innerHTML = `
+      <div class="fi-short" style="color:#c9a961;opacity:0.85;">${org.short}</div>
+      <div class="fi-name">${org.name}</div>
+      <div class="fi-desc" style="color:rgba(201,169,97,0.7);">このカートリッジは鋭意準備中です。もうすぐお届けします。</div>
+      <span class="fi-cta" style="color:#c9a961;border-color:#c9a961;background:rgba(201,169,97,0.08);cursor:default;pointer-events:none;">◉ COMING SOON</span>
+    `;
+  } else {
+    panel.innerHTML = `
+      <div class="fi-short">${org.short}</div>
+      <div class="fi-name">${org.name}</div>
+      <div class="fi-desc">${org.description}</div>
+      <span class="fi-cta" onclick="pickOrg(${org.id})">▶ イベントを見る</span>
+    `;
+  }
+}
+
+// Coming soon toast notification
+let _toastTimer = null;
+function showComingSoonToast(orgName) {
+  let toast = document.getElementById('cs-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'cs-toast';
+    toast.className = 'cs-toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = `${orgName} のカートリッジは準備中です`;
+  toast.classList.add('show');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+function scrollShelf(direction) {
+  const track = document.getElementById('shelf-track');
+  if (!track) return;
+  const cartEl = track.querySelector('.cart');
+  const step = cartEl ? cartEl.offsetWidth + 32 : 350;
+  track.scrollBy({ left: direction * step, behavior: 'smooth' });
+}
+
+// Debounced scroll listener to update focus
+let _focusScrollTimer = null;
+document.addEventListener('DOMContentLoaded', () => {
+  const track = document.getElementById('shelf-track');
+  if (track) {
+    track.addEventListener('scroll', () => {
+      if (_focusScrollTimer) cancelAnimationFrame(_focusScrollTimer);
+      _focusScrollTimer = requestAnimationFrame(updateCartFocus);
+    });
+  }
+  // Keyboard arrows for shelf navigation
+  document.addEventListener('keydown', (e) => {
+    if (document.body.classList.contains('event-active') || document.body.classList.contains('detail-active')) return;
+    if (e.key === 'ArrowLeft') scrollShelf(-1);
+    else if (e.key === 'ArrowRight') scrollShelf(1);
+    else if (e.key === 'Enter') {
+      const focus = document.querySelector('.shelf-track .cart.is-focus');
+      if (focus) pickOrg(parseInt(focus.dataset.id, 10));
+    }
+  });
+});
+
+// =====================================================
+// PICK ORG → POSTER WALL
+// =====================================================
+let currentOrg = null;
+let currentPosterIdx = 0;
+
+function pickOrg(id) {
+  const org = orgs.find(o => o.id === id);
+  if (!org) return;
+
+  // If the clicked cart is not the focused one, center it first
+  const track = document.getElementById('shelf-track');
+  const clicked = track?.querySelector(`.cart[data-id="${id}"]`);
+  if (clicked && !clicked.classList.contains('is-focus')) {
+    clicked.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+    return;  // Wait for user to click again on now-focused cart
+  }
+
+  currentOrg = org;
+  currentPosterIdx = 0;
+
+  const flash = document.getElementById('flash');
+  flash.classList.remove('fire'); void flash.offsetWidth; flash.classList.add('fire');
+  document.body.classList.add('event-active', 'lock');
+
+  setTimeout(() => {
+    document.getElementById('shop').classList.add('exit');
+    renderWall(org);
+    document.getElementById('wall-scene').classList.add('active');
+  }, 300);
+}
+
+function backToShop() {
+  const flash = document.getElementById('flash');
+  flash.classList.remove('fire'); void flash.offsetWidth; flash.classList.add('fire');
+  setTimeout(() => {
+    document.getElementById('wall-scene').classList.remove('active');
+    document.getElementById('shop').classList.remove('exit');
+    document.getElementById('boy').classList.remove('pick');
+    document.body.classList.remove('event-active', 'lock');
+  }, 300);
+}
+
+function posterHTML(event, idx, org) {
+  const rot = ((idx % 3) - 1) * 1.5;
+  const symbolCls = event.symbolCls || 'en';
+  const titleClass = event.titleEn ? 'en' : '';
+  const hasImage = !!event.posterImage;
+
+  const decoSet = idx % 2 === 0
+    ? '<span class="tape top-l"></span><span class="tape top-r"></span>'
+    : '<span class="push-pin"></span><span class="tape bot-l"></span>';
+
+  const innerHTML = hasImage
+    ? `<div class="poster-img" style="--poster-image: url('${event.posterImage}');"></div>
+       <div class="poster-date">${event.date}</div>`
+    : `<div class="poster-ph" style="--poster-bg: ${event.posterBg}; --poster-accent: ${event.accent}; --poster-color: #fff;">
+        <div class="mj-slot">[MJ IMAGE HERE]</div>
+        <div class="genre-stripe">${org.short} PRESENTS</div>
+        <div class="poster-big-symbol ${symbolCls}">${event.symbol}</div>
+        <div class="poster-title">
+          <div class="p-title-main ${titleClass}">${event.title}</div>
+          <div class="p-title-sub">${event.sub}</div>
+          <div class="p-tag">— ${event.tagline}</div>
+        </div>
+        <div class="poster-date">${event.date}</div>
+       </div>`;
+  return `<div class="poster" data-idx="${idx}" style="--rot: ${rot}deg; --poster-accent: ${event.accent};" onclick="openEventModal(${idx})">
+    ${decoSet}
+    <div class="poster-inner">${innerHTML}</div>
+  </div>`;
+}
+
+function renderWall(org) {
+  const mini = document.getElementById('wall-cart-mini');
+  mini.innerHTML = cartHTML(org);
+  const miniCart = mini.querySelector('.cart');
+  if (miniCart) { miniCart.onclick = null; miniCart.style.cursor = 'default'; miniCart.style.transform = 'none'; miniCart.querySelector('.cart-tooltip')?.remove(); }
+
+  document.getElementById('wall-org-title').textContent = org.name;
+  document.getElementById('wall-org-sub').textContent = `${org.short} · ${org.events.length} UPCOMING EVENTS`;
+  document.getElementById('wall-scene').style.setProperty('--org-accent', org.accent);
+
+  // Use shared flyerHTML so the cart-click view matches the board tab design
+  document.getElementById('poster-track').innerHTML = org.events.map((e, i) =>
+    flyerHTML(org, e, i, i, {
+      size: 'wall',
+      onClick: `openEventModal(${i})`
+    })
+  ).join('');
+  document.getElementById('scroll-indicator').innerHTML = org.events.map((_,i) =>
+    `<div class="scroll-dot ${i===0?'active':''}" data-idx="${i}"></div>`
+  ).join('');
+
+  updateCounter();
+  const track = document.getElementById('poster-track');
+  track.onscroll = () => { clearTimeout(track._t); track._t = setTimeout(updateCounter, 100); };
+  track.scrollLeft = 0;
+}
+
+function updateCounter() {
+  if (!currentOrg) return;
+  const track = document.getElementById('poster-track');
+  const items = track.querySelectorAll('.flyer, .poster');
+  let closestIdx = 0, closestDist = Infinity;
+  const mid = track.scrollLeft + track.clientWidth / 2;
+  items.forEach((p, i) => {
+    const center = p.offsetLeft + p.offsetWidth / 2;
+    const dist = Math.abs(center - mid);
+    if (dist < closestDist) { closestDist = dist; closestIdx = i; }
+  });
+  currentPosterIdx = closestIdx;
+  document.getElementById('wall-counter').textContent =
+    `${String(closestIdx+1).padStart(2,'0')} / ${String(currentOrg.events.length).padStart(2,'0')}`;
+  document.querySelectorAll('.scroll-dot').forEach((d,i) => d.classList.toggle('active', i===closestIdx));
+}
+
+function scrollPosters(dir) {
+  const track = document.getElementById('poster-track');
+  const items = track.querySelectorAll('.flyer, .poster');
+  if (!items.length) return;
+  const newIdx = Math.max(0, Math.min(items.length - 1, currentPosterIdx + dir));
+  const target = items[newIdx];
+  if (!target) return;
+  track.scrollTo({ left: target.offsetLeft + target.offsetWidth/2 - track.clientWidth/2, behavior: 'smooth' });
+}
+
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('scroll-dot')) {
+    const idx = parseInt(e.target.dataset.idx);
+    const items = document.querySelectorAll('#poster-track .flyer, #poster-track .poster');
+    const target = items[idx];
+    const track = document.getElementById('poster-track');
+    if (target && track) {
+      track.scrollTo({ left: target.offsetLeft + target.offsetWidth/2 - track.clientWidth/2, behavior: 'smooth' });
+    }
+  }
+});
+
+document.getElementById('poster-track').addEventListener('wheel', (e) => {
+  if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+    e.preventDefault();
+    e.currentTarget.scrollBy({ left: e.deltaY * 2, behavior: 'auto' });
+  }
+}, { passive: false });
+
+// =====================================================
+// EVENT DETAIL MODAL
+// =====================================================
+function openEventModal(idx) {
+  if (!currentOrg) return;
+  const event = currentOrg.events[idx];
+  if (!event) return;
+
+  const symbolCls = event.symbolCls || 'en';
+  const titleClass = event.titleEn ? 'en' : '';
+  const hasImage = !!event.posterImage;
+  const decoSet = '<span class="tape top-l"></span><span class="tape top-r"></span>';
+
+  const innerHTML = hasImage
+    ? `<div class="poster-img" style="--poster-image: url('${event.posterImage}');"></div>
+       <div class="poster-date">${event.date}</div>`
+    : `<div class="poster-ph" style="--poster-bg: ${event.posterBg}; --poster-accent: ${event.accent}; --poster-color: #fff;">
+        <div class="mj-slot">[MJ IMAGE HERE]</div>
+        <div class="genre-stripe">${currentOrg.short} PRESENTS</div>
+        <div class="poster-big-symbol ${symbolCls}">${event.symbol}</div>
+        <div class="poster-title">
+          <div class="p-title-main ${titleClass}">${event.title}</div>
+          <div class="p-title-sub">${event.sub}</div>
+          <div class="p-tag">— ${event.tagline}</div>
+        </div>
+        <div class="poster-date">${event.date}</div>
+       </div>`;
+
+  document.getElementById('em-poster').innerHTML = `
+    <div class="poster" style="--rot: 0deg; --poster-accent: ${event.accent};">
+      ${decoSet}<div class="poster-inner">${innerHTML}</div>
+    </div>`;
+
+  const titleCls = event.titleEn ? 'en' : '';
+  document.getElementById('em-detail').innerHTML = `
+    <div class="em-cat" style="--ev-accent: ${event.accent};">${currentOrg.short} · EVENT</div>
+    <h1 class="em-title ${titleCls}">${event.title}</h1>
+    <div class="em-tag" style="--ev-accent: ${event.accent};">— ${event.tagline}</div>
+    <dl class="em-meta" style="--ev-accent: ${event.accent};">
+      <dt>DATE</dt><dd>${event.date}</dd>
+      <dt>VENUE</dt><dd>${event.venue}</dd>
+      <dt>STUDIO</dt><dd>${currentOrg.name}</dd>
+    </dl>
+    <div class="em-body">${event.body}</div>
+    <div class="em-actions" style="--ev-accent: ${event.accent};">
+      <button class="em-btn" style="background: ${event.accent};">▶ 参加する</button>
+      <button class="em-btn ghost" style="box-shadow: 4px 4px 0 ${event.accent};">▤ SHARE</button>
+    </div>`;
+  document.getElementById('event-modal-overlay').classList.add('open');
+}
+function closeEventModal() {
+  document.getElementById('event-modal-overlay').classList.remove('open');
+  // If we opened from the board, don't clear currentOrg — but restore it
+  if (_lastBoardContext) {
+    currentOrg = _prevOrg || null;
+    _lastBoardContext = false;
+  }
+}
+
+// =====================================================
+// TAB SWITCHING — SHOP / BOARD
+// =====================================================
+function switchTab(tab) {
+  // Update tab buttons
+  document.querySelectorAll('.top-nav button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  // Toggle body class (CSS handles visibility)
+  if (tab === 'board') {
+    document.body.classList.add('tab-board');
+    document.getElementById('board-scene').classList.add('active');
+    if (!_boardRendered) {
+      renderBoardFilter();
+    }
+    renderBoard();
+    _boardRendered = true;
+  } else {
+    document.body.classList.remove('tab-board');
+    document.getElementById('board-scene').classList.remove('active');
+    // Re-compute cart focus after layout returns
+    setTimeout(updateCartFocus, 50);
+  }
+}
+
+// =====================================================
+// EVENT BOARD — render 60 flyers
+// =====================================================
+let _boardRendered = false;
+let _boardFilter = 'all';
+let _lastBoardContext = false;
+let _prevOrg = null;
+
+function renderBoardFilter() {
+  const cats = [
+    { key: 'all',      label: 'ALL · 全部' },
+    { key: 'music',    label: 'MUSIC · 音楽' },
+    { key: 'tech',     label: 'TECH · 技術' },
+    { key: 'art',      label: 'ART · 芸術' },
+    { key: 'sport',    label: 'SPORT · スポーツ' },
+    { key: 'festival', label: 'EVENT · イベント' },
+  ];
+  document.getElementById('board-filter').innerHTML = cats.map(c =>
+    `<button data-key="${c.key}" class="${c.key === _boardFilter ? 'active' : ''}"
+             onclick="setBoardFilter('${c.key}')">${c.label}</button>`
+  ).join('');
+}
+
+function setBoardFilter(key) {
+  _boardFilter = key;
+  renderBoardFilter();
+  renderBoard();
+}
+
+// =====================================================
+// SHARED FLYER TEMPLATE — used by both board tab and wall scene
+// =====================================================
+function flyerHTML(org, event, idx, i, opts) {
+  opts = opts || {};
+  const onClick = opts.onClick || `openEventFromBoard(${org.id}, ${idx})`;
+  const includeDeco = opts.deco !== false;
+
+  const rand = (seed) => { const x = Math.sin(seed) * 10000; return x - Math.floor(x); };
+  const tilt = (rand(i * 7 + 3) * 6 - 3).toFixed(2);
+
+  let deco = '';
+  if (includeDeco) {
+    const r = rand(i * 13 + 1);
+    if (r < 0.35) {
+      const pinColors = ['', 'yellow', 'blue', 'green'];
+      const pinCls = pinColors[Math.floor(rand(i * 17) * pinColors.length)];
+      deco = `<span class="flyer-pin ${pinCls}"></span>`;
+    } else if (r < 0.7) {
+      const tapeColors = ['', 'green', 'pink'];
+      const tapeCls = tapeColors[Math.floor(rand(i * 19) * tapeColors.length)];
+      deco = `<span class="flyer-tape top-l ${tapeCls}"></span>
+              <span class="flyer-tape top-r ${tapeCls}"></span>`;
+    } else {
+      deco = `<span class="flyer-tape top-l"></span>`;
+    }
+  }
+
+  const hasImg = !!event.posterImage;
+  const inner = hasImg
+    ? `<img class="flyer-img" src="${event.posterImage}" alt="${event.title}" loading="lazy">`
+    : `<div class="flyer-placeholder" style="position:absolute;inset:0;background:${event.posterBg};display:flex;align-items:center;justify-content:center;padding:14px;text-align:center;">
+        <div>
+          <div style="font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:2px;color:${event.accent};margin-bottom:10px;">${org.short}</div>
+          <div style="font-family:'Shippori Mincho B1',serif;font-size:22px;font-weight:800;color:#fff;line-height:1.05;text-shadow:2px 2px 0 rgba(0,0,0,0.5);">${event.title}</div>
+          <div style="font-family:'VT323',monospace;font-size:13px;color:rgba(255,255,255,0.7);margin-top:6px;">${event.sub}</div>
+        </div>
+      </div>`;
+
+  // Date block — split "5/16" into parts so the separator can be styled small
+  const parsed = parseFlyerDate(event.date);
+  let dateBlock;
+  if (parsed.valid) {
+    const dowCls = parsed.dow === '土' ? 'saturday' : parsed.dow === '日' ? 'sunday' : '';
+    dateBlock = `<div class="flyer-date ${dowCls}">
+        <span class="fd-num">${parsed.m}<span class="fd-sep">/</span>${parsed.d}</span>
+        ${parsed.dow ? `<span class="fd-dow">${parsed.dow}</span>` : ''}
+      </div>`;
+  } else {
+    dateBlock = `<div class="flyer-date-recur">${parsed.raw}</div>`;
+  }
+
+  // Stamp variation by index for visual diversity
+  const stampOptions = [
+    { text: '開催<br>決定', cls: '' },
+    { text: '注目<br>企画', cls: 'blue' },
+    { text: '新作<br>公演', cls: 'green' },
+    { text: '限定<br>開催', cls: 'gold' },
+  ];
+  const stamp = stampOptions[(i ?? idx) % stampOptions.length];
+
+  // Extract OPEN time
+  const timeMatch = event.date.match(/(\d{1,2}:\d{2})/);
+  const openTime = timeMatch ? timeMatch[1] : '開催時間は別途';
+  const venueShort = event.venue.length > 18 ? event.venue.slice(0, 17) + '…' : event.venue;
+
+  const titleCls = event.titleEn ? 'en' : '';
+  const sizeClass = opts.size ? ` flyer-${opts.size}` : '';
+
+  return `
+    <div class="flyer${sizeClass}" style="--tilt: ${tilt}deg; --fly-accent: ${event.accent};"
+         data-org-id="${org.id}" data-event-idx="${idx}"
+         onclick="${onClick}">
+      ${deco}
+      <div class="flyer-inner">
+        ${inner}
+        <div class="flyer-org">${org.short}</div>
+        <div class="flyer-stamp ${stamp.cls}">${stamp.text}</div>
+        ${dateBlock}
+        <div class="flyer-accent-bar"></div>
+        <div class="flyer-info">
+          <div class="flyer-subtitle">${event.sub}</div>
+          <div class="flyer-title ${titleCls}">${event.title}</div>
+          ${event.tagline ? `<div class="flyer-tagline">${event.tagline}</div>` : ''}
+          <div class="flyer-details">
+            <div class="fd-row"><span class="lbl">OPEN</span><span class="val">${openTime}</span></div>
+            <div class="fd-row"><span class="lbl">PLACE</span><span class="val">${venueShort}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderBoard() {
+  const items = [];
+  orgs.forEach(org => {
+    if (org.comingSoon === true) return;
+    if (_boardFilter !== 'all' && org.cat !== _boardFilter) return;
+    org.events.forEach((ev, idx) => {
+      items.push({ org, event: ev, idx });
+    });
+  });
+
+  const html = items.map((it, i) => flyerHTML(it.org, it.event, it.idx, i)).join('');
+
+  document.getElementById('board-grid').innerHTML = html ||
+    '<div style="grid-column:1/-1;text-align:center;padding:60px;color:rgba(255,232,196,0.6);font-family:\'Shippori Mincho B1\',serif;">該当するイベントがありません</div>';
+}
+
+// Parse Japanese event date string into structured parts.
+// Examples handled:
+//   "05.16 (金) 18:30"       → {m:'5', d:'16', dow:'金', valid:true}
+//   "08.16 (土) - 18 (月)"   → {m:'8', d:'16', dow:'土', valid:true}
+//   "11.01 (土) - 02 (日)"   → {m:'11', d:'01', dow:'土', valid:true}
+//   "毎月第2土曜 20:00"       → {valid:false, raw:'毎月第2土曜'}
+//   "毎週水曜 18:30"          → {valid:false, raw:'毎週水曜'}
+function parseFlyerDate(dateStr) {
+  if (!dateStr) return { valid: false, raw: '' };
+  const m = dateStr.match(/^(\d{1,2})\.(\d{1,2})\s*(?:\(([^)]+)\))?/);
+  if (m) {
+    return {
+      m: String(parseInt(m[1])),
+      d: m[2].padStart(2, '0'),
+      dow: m[3] || '',
+      valid: true,
+    };
+  }
+  const raw = dateStr.split(' ')[0];
+  return { valid: false, raw: raw };
+}
+
+function openEventFromBoard(orgId, eventIdx) {
+  const org = orgs.find(o => o.id === orgId);
+  if (!org) return;
+  _prevOrg = currentOrg;
+  _lastBoardContext = true;
+  currentOrg = org;
+  openEventModal(eventIdx);
+}
+
+// =====================================================
+// INIT
+// =====================================================
+renderCats();
+renderShelf();
+
+let tvIdx = 0;
+setInterval(() => {
+  tvIdx = (tvIdx + 1) % orgs.length;
+  const t = document.getElementById('tv-title');
+  const o = document.getElementById('tv-org');
+  if (t) t.textContent = orgs[tvIdx].short;
+  if (o) o.textContent = `© ${orgs[tvIdx].cart.code || ''}`;
+}, 3000);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('event-modal-overlay').classList.contains('open')) closeEventModal();
+    else if (document.getElementById('wall-scene').classList.contains('active')) backToShop();
+  }
+  if (document.getElementById('wall-scene').classList.contains('active') &&
+      !document.getElementById('event-modal-overlay').classList.contains('open')) {
+    if (e.key === 'ArrowLeft') scrollPosters(-1);
+    if (e.key === 'ArrowRight') scrollPosters(1);
+  }
+});
+</script>
+</body>
+</html>
